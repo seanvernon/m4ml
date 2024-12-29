@@ -1,0 +1,71 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+% The following lines, up to \title, are from this StackExchange post: http://tex.stackexchange.com/questions/14071/ddg#14072
+\makeatletter
+\renewcommand*\env@matrix[1][\arraystretch]{%
+  \edef\arraystretch{#1}%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{*\c@MaxMatrixCols c}}
+\makeatother
+
+\title{Homework 3}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+Due Date:  \\
+Name: \\
+Student ID:
+
+\section*{Instructions for Submission}
+Please include your name and student ID at the top of your homework submission. You may submit handwritten solutions or typed ones (\LaTeX\ preferred). If you at any point write code to help you solve a problem, please include your code at the end of the homework assignment, and mark which code goes with which problem. Homework is due by start of lecture on the due date; it may be submitted in-person at lecture or by emailing a PDF to both facilitators.
+
+\section{Practice with Determinant and Trace}
+\begin{enumerate}
+\item Let $T: \mathbb{R}^2 \to \mathbb{R}^2$ be a linear map that sends $(1,0) \mapsto (2,0)$ and $(0,1) \mapsto (3,4)$. What is $\det(T)$? 
+\item What is $\text{tr}(T)$?
+\item Let $U$ be a proper subspace of a vector space $V$. Let $\mathbf{P}$ be a projection map onto $U$. What is $\det(\mathbf{P})$? 
+\end{enumerate}
+
+\section{Proofs about Determinant and Trace}
+\noindent Let $\mathbf{A}$ be an arbitrary square matrix.
+\begin{enumerate}
+\item Prove that, if $\mathbf{A}$ is invertible, then $\text{det}(\mathbf{A}^{-1}) = \text{det}(\mathbf{A})^{-1}$.
+\item Conclude that if $\text{det}(\mathbf{A}) = 0$, $\mathbf{A}$ is not invertible.
+\item Let $\mathbf{B}$ be an invertible matrix. Prove $\text{tr}(\mathbf{A}) = \text{tr}(\mathbf{BAB^{-1}})$.
+\end{enumerate}
+
+
+\section{Computing Eigenvalues and Eigenvectors}
+Let $$\mathbf{A} = \begin{bmatrix}[1.5] 4 & 1 & -1 \\ \frac{3}{2} & \frac{7}{2} & -\frac{3}{2} \\ \frac{1}{2} & \frac{-1}{2} & \frac{5}{2} \end{bmatrix}$$
+\begin{enumerate}
+\item Find $p_{\mathbf{A}}(\lambda)$, the characteristic polynomial of $\mathbf{A}$.
+\item Using $p_{\mathbf{A}}(\lambda)$, compute the eigenvalues of $\mathbf{A}$.
+\item Find the eigenvectors of $\mathbf{A}$.
+\end{enumerate}
+
+\section{Proofs about Eigenvalues}
+\noindent Let $\mathbf{A} \in \mathbb{R}^{n \times n}$ be a square matrix such that the eigenvectors of $\mathbf{A}$ are a basis for $\mathbb{R}^n$. Additionally, let $\lambda_i$, $1 \leq i \leq n$ be the eigenvalues of $\mathbf{A}$.
+\begin{enumerate}
+\item Prove that $\text{det}(\mathbf{A}) = \prod\limits_{i = 1}^n \lambda_i$.
+\item Prove that $\text{tr}(\mathbf{A}) = \sum\limits_{i = 1}^n \lambda_i$.
+\end{enumerate}
+
+\end{document}

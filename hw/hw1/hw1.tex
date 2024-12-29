@@ -1,0 +1,56 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+\title{Homework 1}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+Due Date: February 12 \\
+Name: \\
+Student ID:
+
+\section*{Instructions for Submission}
+Please include your name and student ID at the top of your homework submission. You may submit handwritten solutions or typed ones (\LaTeX\ preferred). If you at any point write code to help you solve a problem, please include your code at the end of the homework assignment, and mark which code goes with which problem. Homework is due by start of lecture on the due date; it may be submitted in-person at lecture or by emailing a PDF to both facilitators.
+
+\section{Demographics}
+\begin{enumerate}[label=\arabic*.]
+\item What year are you in and what is your major?
+\item Which courses in the Math department have you taken prior to this course?
+\item What courses in the CS or Data Science department have you taken prior to this course?
+\item What courses in the Statistics department have you taken prior to this course?
+\item What courses in the EE department have you taken prior to this course?
+\item Have you taken any other courses which you believe are relevant to this one? If so, which?
+\item Are you planning on taking CS 189 or another machine learning course?
+\item What led you to enroll in this course, and what are you hoping to get out of it?
+\end{enumerate}
+
+\section{Perceptrons}
+\begin{enumerate}[label=\arabic*.]
+\item Suppose we are working with two-dimensional data, and have the following datapoints: \\
+Class A: $\mathbf{x}_1 = [1, 1]$, $\mathbf{x}_2 = [4, 4]$ \\
+Class B: $\mathbf{x}_3 = [1, -2]$, $\mathbf{x}_4 = [4, 1]$ 
+	  \begin{enumerate}[label=(\alph*)]
+	  \item By observation, determine a decision boundary for this data.
+	  \item Using the file hw1.py, run the perceptron algorithm with learning rate $r = 0.1$ on this data, and report your final values for $\mathbf{w}$, $b$, and the decision boundary determined by the algorithm. (To run the file, run \verb|python hw1.py| from your terminal.)
+	  \end{enumerate}
+\item Can a perceptron be trained to learn the one-bit XOR operation, using the input values as features? Why or why not? (For those unfamiliar, $a$ XOR $b$ is true if and only if $a \neq b$.) 
+\item Prove that the perceptron algorithm will not converge if the data is not linearly separable.
+\end{enumerate}
+
+\end{document}

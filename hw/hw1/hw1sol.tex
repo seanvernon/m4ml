@@ -1,0 +1,74 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+% The following, up to \title, is from this StackOverflow post: https://stackoverflow.com/a/3175141
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\title{Homework 1 Solutions}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Demographics}
+\begin{enumerate}[label=\arabic*.]
+\item What year are you in and what is your major?
+\item Which courses in the Math department have you taken prior to this course?
+\item What courses in the CS or Data Science department have you taken prior to this course?
+\item What courses in the Statistics department have you taken prior to this course?
+\item What courses in the EE department have you taken prior to this course?
+\item Have you taken any other courses which you believe are relevant to this one? If so, which?
+\item Are you planning on taking CS 189 or another machine learning course?
+\item What led you to enroll in this course, and what are you hoping to get out of it?
+\end{enumerate}
+
+\section{Perceptrons}
+\begin{enumerate}[label=\arabic*.]
+\item Suppose we are working with two-dimensional data, and have the following datapoints: \\
+Class A: $\mathbf{x}_1 = [1, 1]$, $\mathbf{x}_2 = [4, 4]$ \\
+Class B: $\mathbf{x}_3 = [1, -2]$, $\mathbf{x}_4 = [4, 1]$ 
+	  \begin{enumerate}[label=(\alph*)]
+	  \item By observation, determine a decision boundary for this data. \\
+	  		{\color{blue}$x_{i2} = x_{i1} - 1$ is one of many possible decision boundaries. The associated weight vector is $\mathbf{w} = [-1, 1]$ and the bias is $b = 1$.}
+	  \item Using the file hw1.py, run the perceptron algorithm with learning rate $r = 0.1$ on this data, and report your final values for $\mathbf{w}$, $b$, and the decision boundary determined by the algorithm. (To run the file, run \verb|python hw1.py| from your terminal.) \\
+	  {\color{blue} The final values were $\mathbf{w} = [-\frac{1}{5}, \frac{7}{10}]$ and $b = \frac{1}{10}$; this corresponds to the decision boundary $x_{i2} = \frac{2}{7}x_{i1} - \frac{1}{7}$.}
+	  \end{enumerate}
+\item Can a perceptron be trained to learn the one-bit XOR operation, using the input values as features? Why or why not? (For those unfamiliar, $a$ XOR $b$ is true if and only if $a \neq b$.) \\
+{\color{blue}No, as any training data for XOR would not be linearly separable. This issue is illustrated in the figure in Note 1, on the right side -- taking the values of the two inputs $a$ and $b$ as features and the output as the class label, we get the exact same graph when plotting the four possible input values to one-bit XOR.}
+\item Prove that the perceptron algorithm will not converge if the data is not linearly separable (assuming the learning rate is not 0). \\
+{\color{blue}Proof by contradiction. Suppose the algorithm did converge on data which is not linearly separable. Then, for some time $t$, we have $\mathbf{w}^{t+1} = \mathbf{w}^t$ and $b^{t+1} = b^t$. So, for all datapoints $x_j$, we have $$w_i^{t+1} = w_i^t + r(\delta_j - y_j^t)x_{ji}$$ and $$b^{t+1} = b^t + r(\delta_j-y_j^t)$$ This in turn implies that $(\delta_j - y_j^t) = 0$ for all datapoints $x_j$. But if this is true, then every datapoint is correctly classified by the decision boundary outputted by the perceptron. This, in turn, implies that the data is linearly separable, a contradiction; therefore, the algorithm will not converge on data which is not linearly separable. $\hfill\square$}
+\end{enumerate}
+
+\end{document}

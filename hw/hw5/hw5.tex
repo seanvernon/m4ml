@@ -1,0 +1,72 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+\title{Homework 5}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+Due Date: March 11 \\
+Name: \\
+Student ID:
+
+\section*{Instructions for Submission}
+Please include your name and student ID at the top of your homework submission. You may submit handwritten solutions or typed ones (\LaTeX\ preferred). If you at any point write code to help you solve a problem, please include your code at the end of the homework assignment, and mark which code goes with which problem. Homework is due by start of lecture on the due date; it may be submitted in-person at lecture or by emailing a PDF to both facilitators.
+
+\section{Working with Adjoints}
+Let $\textbf{A} \in \mathbb{R}^{m \times n}$.
+\begin{enumerate}[label=(\alph*)]
+\item Show that $\ker \textbf{A}^\top \textbf{A} = \ker \textbf{A}$.
+\item Deduce that $\text{rank}( \textbf{A}^\top \textbf{A}) = \text{rank}(\textbf{A})$.
+\item Suppose $\mathbf{A}$ is square. Show that $\textbf{A}$ and $\textbf{A}^\top$ have the same eigenvalues.
+\item Deduce that $\text{rank}(\textbf{A}) = \text{rank}(\textbf{A}^\top)$. (These proofs can be extended to non-square $\mathbf{A}$ by adding rows/columns of all zeroes until $\mathbf{A}$ is square.)
+\end{enumerate}
+
+\section{SVD}
+\begin{enumerate}[label=(\alph*)]
+\item Let $\textbf{A} \in \mathbb{R}^{m \times n}$. Let $\textbf{A} = \textbf{U}\Sigma\textbf{V}^\top$ be its SVD. Find the spectral decompositions of $\textbf{A}^\top\textbf{A}$ and $\textbf{A}\textbf{A}^\top$ in terms of $\textbf{U}, \Sigma, \textbf{V}$.
+\item Prove: If $\textbf{A} \in \mathbb{R}^{n \times n}$ is PSD, then the spectral decomposition of $\textbf{A}$ coincides with the SVD of $\textbf{A}$.
+\item Let $\textbf{A} \in \mathbb{R}^{m \times n}$, and let $\textbf{A} = \textbf{U}\Sigma\textbf{V}^\top$ be its SVD. If $\textbf{V} = (\textbf{v}_1, \hdots, \textbf{v}_n)$, $\textbf{U} = (\textbf{u}_1, \hdots, \textbf{u}_m)$, and $r = \text{rank}(\textbf{A})$, then let
+\begin{gather*}
+\textbf{V}_r = (\textbf{v}_1, \hdots, \textbf{v}_r) \\
+\textbf{U}_r = (\textbf{u}_1, \hdots, \textbf{u}_r).
+\end{gather*}  
+Show that $\textbf{v}_1, \hdots, \textbf{v}_r$ ``diagonalize" $\textbf{A}$ in the following way: For $i = 1,\hdots, r$, show that $\textbf{A}\textbf{v}_i = \sigma_i\textbf{u}_i$.
+\item Let 
+\[
+\textbf{A} = \begin{pmatrix}
+3 & 2 & 2 \\
+2 & 3 & -2
+\end{pmatrix}.
+\]
+Compute the SVD of $\textbf{A}$.
+
+\item Let 
+\[
+\textbf{A} = \begin{pmatrix}
+3 & 2 & 2 \\
+2 & 3 & -2
+\end{pmatrix}.
+\]
+Find orthonormal bases for the four fundamental subspaces of $\textbf{A}$.
+\end{enumerate}
+
+\section{PCA}
+Let $$\mathbf{X} = \begin{bmatrix} -1 & 1 \\ 1 & -1 \\ -2 & -2 \\ 0 & 0 \\ 2 & 2 \end{bmatrix}$$ Note that the SVD of $\mathbf{X}$ is $$\text{SVD}(\mathbf{X}) = \begin{bmatrix} 0 & 0.7 & -0.5 & 0 & 0.5 \\ 0 & -0.7 & -0.5 & 0 & 0.5 \\ -0.7 & 0 & 0.5 & 0 & 0.5 \\ 0 & 0 & 0 & 1 & 0 \\ 0.7 & 0 & 0.5 & 0 & 0.5 \\ \end{bmatrix}\begin{bmatrix} 4 & 0 \\ 0 & 2 \\ 0 & 0 \\ 0 & 0 \\ 0 & 0 \end{bmatrix}\begin{bmatrix}0.7 & 0.7 \\ -0.7 & 0.7 \end{bmatrix}$$ Compute the principal components of $\mathbf{X}$.
+
+\end{document}

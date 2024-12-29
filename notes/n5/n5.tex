@@ -1,0 +1,284 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage[style=verbose]{biblatex}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+
+\title{Note 5: SVD and PCA}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Adjoints}
+How are a matrix $\mathbf{A}$ and its transpose $\mathbf{A}^{\top}$ related? Note that $\langle \mathbf{Ax, y} \rangle = \mathbf{(Ax)^{\top}y} = \mathbf{x^{\top}A^{\top}y} = \langle \mathbf{x, A^{\top}y} \rangle$. So, when taking inner products, it seems that $\mathbf{A^{\top}}$ represents the action of $\mathbf{A}$ on the opposite argument. In fact, this relationship connects back to the underlying linear map $T$ represented by $\mathbf{A}$. We define the \textit{adjoint} of $T$, $T^*$, to be the linear map represented by $\mathbf{A^{\top}}$. Equivalently, $B(T(v), w) = C(v, T^*(w))$ for any appropriate \textit{nondegenerate bilinear forms} $B, C$. (We will not define this term, as it is very far outside the scope of the class. Suffice to say that the inner products $\langle \cdot, \cdot \rangle_{\text{range}(T)}, \langle \cdot, \cdot \rangle_{\text{range}(T^*)}$ can be filled in for $B$ and $C$, although inner products are not the only examples of nondegenerate bilinear forms.)\footnote{If you want to learn more about adjoints, make sure you can solve all of Q4 on Homework 2, as understanding dual spaces is essential to understanding adjoints.} \\\\
+We now explore how the adjoint $T^*$ connects back to $\mathbf{A}$. Observe that any vector of the form $\mathbf{Av}$ is a linear combination of the columns of $\mathbf{A}$. Likewise, any vector of the form $\mathbf{A^{\top}w}$ is a linear combination of the rows of $\mathbf{A}$. Therefore, $\text{Im}(T) = \text{range}(\mathbf{A}) = \text{col}(\mathbf{A})$, the \textit{column space} of $\mathbf{A}$; $\text{Im}(T^*) = \text{range}(\mathbf{A}^{\top}) = \text{row}(\mathbf{A})$, the \textit{row space} of $\mathbf{A}$. \\\\
+For any linear map $T: \mathbb{R}^n \to \mathbb{R}^m$ (or the associated matrix $\textbf{A} \in \mathbb{R}^{m \times n}$), we therefore have the following four "fundamental subspaces" associated with $T$:
+\begin{enumerate}
+    \item $\text{Im}(T)$, a.k.a. $\text{col}(\textbf{A})$
+    \item $\ker(T)$, a.k.a. $\text{null}(\textbf{A})$
+    \item $\text{Im}(T^*)$, a.k.a. $\text{row}(\textbf{A})$
+    \item $\ker(T^*)$, a.k.a. $\text{null}(\textbf{A}^\top)$.
+\end{enumerate}
+\section{Fundamental Theorem of Linear Algebra and SVD}
+It turns out these subspaces are related in a way captured by the first part of the Fundamental Theorem of Linear Algebra:
+\subsubsection*{Theorem (FTLA, Part I)} Let $\mathbf{A} \in \mathbb{R}^{m \times n}$. Then 
+\begin{enumerate}[label=(\alph*)]
+    \item $\mathbb{R}^m = \text{range}(\mathbf{A}) \oplus \text{ker}(\mathbf{A}^\top)$.
+    \item $\text{rank}(\mathbf{A}) + \dim \ker (\mathbf{A}) = n$. 
+\end{enumerate} 
+\subsubsection*{Proof}
+Proving (a) amounts to showing that $\text{ker}(\mathbf{A}^{\top}) = \text{range}(\mathbf{A})^\perp$. We have
+\begin{align*}
+    \textbf{x} \in \ker(\mathbf{A}^{\top}) &\iff \mathbf{A^{\top} x} = \mathbf{0} \\
+    &\iff \textbf{a}_i^{\top}\textbf{x} = 0 \text{ for all } i =1,\hdots,n \text{ (where $\textbf{a}_i$ is the $i$'th column of $\textbf{A}$)} \\
+    &\iff \textbf{v}^\top\textbf{x} = 0 \text{ for all } \textbf{v} \in \text{range}(\mathbf{A}) \\
+    &\iff \textbf{x} \in \text{Im}(\mathbf{A})^\perp.
+\end{align*}
+Part (b) hinges on the fact that $\text{rank}(\mathbf{A}) = \text{rank}(\mathbf{A}^\top)$. Assuming that fact, apply (a) combined with that $\dim (U \oplus V) = \dim U + \dim V$. $\hfill\square$
+\\ \\
+Part (b) is usually known as the \textit{Rank-Nullity Theorem}. 
+
+\subsection*{Singular Value Decomposition}
+Given $\textbf{A} \in \mathbb{R}^{m \times n}$, the FTLA gives us two natural-looking orthogonal decompositions involving the four fundamental subspaces of $\mathbf{A}$:
+\begin{enumerate}[label=(\roman*)]
+    \item $\mathbb{R}^n = \text{ker}(\textbf{A}) \oplus \text{range}(\textbf{A}^\top)$
+    \item $\mathbb{R}^m = \ker(\textbf{A}^\top) \oplus \text{range}(\textbf{A})$
+\end{enumerate}
+To dig deeper, we must examine the matrices $\textbf{A}^\top\textbf{A} \in \mathbb{R}^{n \times n}$ and $\textbf{A}\textbf{A}^\top \in \mathbb{R}^{m \times m}$. 
+%In the context of machine learning, if we imagine that $\textbf{A}$ is a design matrix, where each of the $m$ rows is a data point and each of the $n$ columns is a feature, then $\textbf{A}^\top\textbf{A} \in \mathbb{R}^{n \times n}$ measures similarity of points...
+From an intuitive perspective, note that $(\textbf{A}^\top\textbf{A})_{i,j} = \textbf{a}_i^{\top}\textbf{a}_j$, where $\textbf{a}_i$ is the $i$'th column of $\textbf{A}$. Thus, $\textbf{A}^\top\textbf{A}$ gives some measure of the similarity between the columns of $\textbf{A}$. Similarly, $\textbf{A}\textbf{A}^\top$ measures similarity between the rows of $\textbf{A}$.
+\\ \\
+\textbf{Lemma 1.} If $\textbf{A}$ has full column rank (i.e. $\textbf{A}$ has $n$ linearly independent columns), then $\textbf{A}^\top\textbf{A}$ is invertible.
+\\ \\
+\textbf{Proof.} Let $\textbf{x} \in \ker(\textbf{A}^\top\textbf{A})$, i.e. $\textbf{A}^\top\textbf{A}\textbf{x} = \textbf{0}$. Then $\textbf{A}\textbf{x} \in \ker(\textbf{A}^\top)$. By FTLA, $\textbf{A}\textbf{x} \in \text{range}(\textbf{A})^\perp$. But clearly $\textbf{A}\textbf{x} \in \text{range}(\textbf{A})$ as well, so $\textbf{A}\textbf{x} = \textbf{0}$ by the fact that $\text{range}(\textbf{A}) \perp \text{range}(\textbf{A})^\perp$. Finally, since $\textbf{A}$ is full-rank, $\textbf{A}\textbf{x} = \textbf{0}$ implies that $\textbf{x} = \textbf{0}$. Thus, $\textbf{A}^\top\textbf{A}$ is a square matrix with trivial kernel, so it is invertible. $\hfill\square$
+\\ \\
+\textbf{Lemma 2.}  $\ker(\textbf{A}^\top\textbf{A}) = \ker (\textbf{A})$, so $\text{rank}(\textbf{A}^\top\textbf{A}) = \text{rank}(\textbf{A})$. \\ \\
+\textbf{Proof.} Exercise.
+\\ \\
+\textbf{Lemma 3.} $\textbf{A}^\top\textbf{A}$ is positive semi-definite (PSD). 
+\\ \\
+\textbf{Proof.} Clearly $(\textbf{A}^\top\textbf{A})^\top = \textbf{A}^\top\textbf{A}$, so it is symmetric. To show that it is PSD, see that $\textbf{x}^\top\textbf{A}^\top\textbf{A}\textbf{x} = \langle \textbf{A}\textbf{x}, \textbf{A}\textbf{x} \rangle \geq 0$ with equality iff $\textbf{A}\textbf{x} = 0$. $\hfill\square$ 
+\\ \\
+To sum up what we know about $\textbf{A}^\top\textbf{A}$:
+\begin{enumerate}[label=(\roman*)]
+    \item It preserves the kernel and rank of $\textbf{A}$
+    \item It is PSD.
+\end{enumerate}
+If we take $\textbf{A}$ to be invertible (thus encoding a change of basis in $\mathbb{R}^n$), we can consider the transformation $\textbf{x} \mapsto \textbf{A}\textbf{x}$. A natural question is: what happens to our standard inner product under the transformation? If the standard inner product of $\textbf{x},\textbf{y}$ is $ \langle \textbf{x}, \textbf{y} \rangle = \textbf{x}^\top \textbf{y} = \textbf{x}^\top \textbf{I}_n \textbf{y}$, then the standard inner product of the transformed vectors $\textbf{A}\textbf{x}, \textbf{A}\textbf{y}$ is $\langle \textbf{A}\textbf{x}, \textbf{A}\textbf{y} \rangle = (\textbf{A}\textbf{x})^\top\textbf{A}\textbf{y} = \textbf{x}^\top(\textbf{A}^\top\textbf{A})\textbf{y}$. So $\textbf{A}^\top\textbf{A}$ can be thought of as a ``scaling factor" by which we can recover the standard inner product in the transformed space under $\textbf{x} \mapsto \textbf{A}\textbf{x}$.  
+\subsubsection*{Existence of SVD}
+Let's examine the spectrum\footnote{A.k.a., the "eigenstuff".} of $\textbf{A}^\top\textbf{A}$. Since $\textbf{A}^\top\textbf{A}$ is PSD, its eigenvalues are all $\geq 0$. Since $\textbf{A}^\top\textbf{A}$ is symmetric, it has a spectral decomposition $$\mathbf{A^\top A= V\Lambda V^\top}$$ More precisely, if $\textbf{A}^\top\textbf{A}$ has $r$ nonzero eigenvalues (with multiplicity), then write
+\begin{gather*}
+    \begin{pmatrix}
+    {\Lambda}' & \textbf{0} \\
+    \textbf{0} & \textbf{0}
+    \end{pmatrix}
+    = \begin{pmatrix}
+    \textbf{V}' \\
+    \textbf{V}_0
+    \end{pmatrix}
+    \textbf{A}^\top\textbf{A}
+    \begin{pmatrix}
+    \textbf{V}' & \textbf{V}_0
+    \end{pmatrix},
+\end{gather*}
+where $\Lambda'$ is a diagonal matrix with the nonzero eigenvalues of $\textbf{A}^\top\textbf{A}$ corresponding to eigenvectors in $\textbf{V}'$ and the eigenvectors with vanishing eigenvalue are in $\textbf{V}_0$. 
+\\ \\
+Next, define 
+\begin{gather*}
+    \textbf{U}' = \textbf{A}\textbf{V}'\Lambda'^{-\frac{1}{2}} \in \mathbb{R}^{m \times r}.
+\end{gather*}
+Then we have
+\begin{align*}
+    \textbf{U}'\Lambda'^{\frac{1}{2}}\textbf{V}'^\top &= \textbf{A}\textbf{V}'\Lambda'^{-\frac{1}{2}}\Lambda'^{\frac{1}{2}}\textbf{V}'^\top \\
+    &= \textbf{A}\textbf{V}'\textbf{V}'^\top \\
+    &= \textbf{A} \text{ because $\textbf{V}$ is unitary}.
+\end{align*}
+Moreover, 
+\begin{align*}
+    \textbf{U}'^\top\textbf{U}' &= (\textbf{A}\textbf{V}'\Lambda'^{-\frac{1}{2}})^\top \textbf{A}\textbf{V}'\Lambda'^{-\frac{1}{2}} \\
+    &= \Lambda'^{-\frac{1}{2}}\textbf{V}'^\top\textbf{A}^\top \textbf{A}\textbf{V}'\Lambda'^{-\frac{1}{2}} \\
+    &= \Lambda'^{-\frac{1}{2}}\Lambda'\Lambda'^{-\frac{1}{2}} \\
+    &= \textbf{I}_r,
+\end{align*}
+so the columns of $\textbf{U}'$ are orthonormal and can be extended to form an orthonormal basis for $\mathbb{R}^m$. If we choose $\textbf{U}_0$ containing these added columns, then 
+\begin{gather*}
+    \textbf{U} = 
+    \begin{pmatrix}
+    \textbf{U}' & \textbf{U}_0
+    \end{pmatrix}
+\end{gather*}
+is unitary. Next, we form 
+\begin{gather*}
+    \mathbf{\Sigma} = 
+    \begin{pmatrix}
+    \Lambda^{\frac{1}{2}} \\
+    \textbf{0}
+    \end{pmatrix}
+\end{gather*}
+so that $\mathbf{\Sigma}$ has $m - r$ rows of zeros at the bottom and is thus in $\mathbb{R}^{m \times n}$. 
+We arrive at
+\begin{align*}
+    \mathbf{U\Sigma V}^\top &= 
+    \begin{pmatrix}
+    \textbf{U}' & \textbf{U}_0
+    \end{pmatrix}
+    \begin{pmatrix}
+    \Lambda^{\frac{1}{2}} \\
+    \textbf{0}
+    \end{pmatrix}
+    \begin{pmatrix}
+    \textbf{V}' \\
+    \textbf{V}_0
+    \end{pmatrix} \\
+    &= \begin{pmatrix}
+    \textbf{U}' & \textbf{U}_0
+    \end{pmatrix}
+    \begin{pmatrix}
+    \Lambda^{\frac{1}{2}}\textbf{V}'^\top \\
+    \textbf{0}
+    \end{pmatrix} \\
+    &= \textbf{U}'\Lambda^{\frac{1}{2}}\textbf{V}'^\top \\
+    &= \textbf{A}.
+\end{align*}
+The decomposition 
+\begin{align*}
+    \textbf{A} = \mathbf{U\Sigma V}^\top
+\end{align*}
+is known as a \textit{singular value decomposition} of $\textbf{A}$, and we have just proven its existence. To sum up,
+\subsubsection*{Theorem (SVD)}
+Given any matrix $\textbf{A} \in \mathbb{R}^{m \times n}$, there exist orthonormal bases $\{\textbf{v}_1, \hdots , \textbf{v}_n\}$ of $\mathbb{R}^n$ and $\{\textbf{u}_1, \hdots , \textbf{u}_m\}$ of $\mathbb{R}^m$ such that if $\textbf{V} = (\textbf{v}_1, \hdots , \textbf{v}_n)$, $\textbf{U} = (\textbf{u}_1, \hdots , \textbf{u}_m)$, and $\mathbf{\Sigma} \in \mathbb{R}^{m \times n}$ is a rectangular diagonal matrix containing the square roots of the nonzero eigenvalues of $\textbf{A}^\top\textbf{A}$, then 
+\begin{gather*}
+    \textbf{A} = \mathbf{U\Sigma V}^\top.
+\end{gather*}
+The square roots of the nonzero eigenvalues of $\textbf{A}^\top\textbf{A}$ are called the \textit{singular values} of $\textbf{A}$.\footnote{It's worth noting that $\textbf{A}^\top\textbf{A}$ and $\textbf{A}\textbf{A}^\top$ have the same nonzero eigenvalues.} They are usually denoted $(\sigma_i)$. The corresponding columns of $\textbf{V}$, i.e. the eigenvectors $(\textbf{v}_i)$ of $\textbf{A}^\top\textbf{A}$ corresponding to the $(\sigma_i)$, are called \textit{right-singular vectors} of $\textbf{A}$. The corresponding columns of $\textbf{U}$ are called \textit{left-singular vectors} of $\textbf{A}$. The singular values of $\textbf{A}$ are unique, but the corresponding singular vectors are not.
+\\ \\
+Note that the columns of $\textbf{U}$ form an eigenbasis of $\mathbb{R}^m$ with respect to $\textbf{A}\textbf{A}^\top$:
+\begin{align*}
+    \textbf{A}\textbf{A}^\top &= \mathbf{U\Sigma V}^\top(\mathbf{U\Sigma V}^\top)^\top \\
+    &= \mathbf{U\Sigma\Sigma^{\top}U}^\top \\
+    &= \mathbf{U\Lambda U^{\top}} \text{ for appropriately sized } \mathbf{\Lambda}.
+\end{align*}
+Similarly, we defined $\textbf{V}$ via the spectral decomposition of $\textbf{A}^\top\textbf{A}$:
+\begin{align*}
+    \textbf{A}^\top\textbf{A} = \textbf{V}\Lambda \textbf{V}^\top \text{ for appropriately sized $\Lambda$.} 
+\end{align*}
+From our discussion about $\textbf{A}^\top\textbf{A}$, it follows that the number of singular values of $\textbf{A}$ is equal to $\text{rank}(\mathbf{A})$. The geometric picture for SVD goes as follows:
+\begin{enumerate}
+    \item First, via the unitary $\textbf{V}^\top$, change coordinates to the eigenbasis for $\textbf{A}^\top\textbf{A}$.
+    \item Via $\mathbf{\Sigma}$, which has the same rank as $\textbf{A}$, scale by the $\sigma_i$.
+    \item Via the unitary $\textbf{U}$, rotate back.
+\end{enumerate}
+Note that in Step 1, the actions of the nonsingular $\textbf{v}_i$ don't matter. Why? Because those $\textbf{v}_i$ correspond to eigenvalue 0, so they are in $\ker (\textbf{A}^\top\textbf{A})$, which we established is the same as $\ker(\textbf{A})$. More thoroughly,
+\subsubsection*{Theorem (FTLA, Part II)}
+Let $\textbf{A} = \mathbf{U\Sigma V}^\top$ be a singular value decomposition of $\textbf{A}$, and let $\text{rank}(\textbf{A}) = r$. Then
+\begin{enumerate}[label=(\roman*)]
+    \item The first $r$ columns of $\textbf{V}$, i.e. the right-singular vectors of $\textbf{A}$, form an orthonormal basis for $\text{range}(\textbf{A}^\top)$.
+    \item The last $n-r$ columns of $\textbf{V}$ form an orthonormal basis for $\ker(\textbf{A})$.
+    \item The first $r$ columns of $\textbf{U}$, i.e. the left-singular vectors of $\textbf{A}$, form an orthonormal basis for $\text{range}(\textbf{A})$.
+    \item The last $m-r$ columns of $\textbf{U}$ form an orthonormal basis for $\ker(\textbf{A}^\top)$.
+\end{enumerate}
+\subsubsection*{Proof}
+Easy to fill in the details from the comment directly preceding the theorem combined with FTLA, Part I. $\hfill\square$ 
+\\ \\
+When passing to the eigenbasis of $\textbf{A}^\top\textbf{A}$ via $\textbf{V}^\top$, we effectively ignore vectors in $\ker(\textbf{A})$, as $\mathbf{\Sigma}$ will kill them. As for the relevant coordinates, we let the singular vectors transform them, $\mathbf{\Sigma}$ scale them, and then $\textbf{U}$ bring them back into the image where they belong. 
+
+\newpage
+\section{Application: Principal Component Analysis (PCA)}
+\subsection*{Motivation}
+When fitting a model (e.g. an OLS model) to data, we hope to represent the data in a simpler way. A basketball player is a complex object; a vector representing $(\textbf{points}, \textbf{assists}, \textbf{rebounds}, \textbf{eye color}, \textbf{birthday})$ is not. However, we hope to use only the most relevant features for (i) fast computation and (ii) to build a more stable model (i.e. reduce the variance of the model). How can we find the features that are important for predicting whether a player helps his team win (probably \textbf{points}, \textbf{assists}, \textbf{rebounds}), allowing us to ignore the features that are not (probably \textbf{eye color}, \textbf{birthday})?
+\\ \\
+Given a matrix of data $\textbf{X} \in \mathbb{R}^{n \times d}$ containing $n$-many $d$-dimensional data points, \textbf{PCA} allows us to find a suitable subspace of $\mathbb{R}^d$ onto which we can project our data, leaving us with the most relevant features. How do we decide which features to drop? The idea is that we look at the data and keep only a small number $(< d)$ of orthogonal directions (perhaps linear combinations of features) that capture the most variance of the data. Intuitively, the low-variance directions contain less information about the data, so we can throw them away, improving the model's performance on new data without hurting predictive accuracy.
+
+\subsection*{Understanding Variance}
+The first step of PCA is to center the data so that every feature has mean 0 amongst the data points. We do this because uncentered data would influence our choice of relevant directions (which will be unit-length arrows starting at 0) in unwanted ways. Thus, we first center $\textbf{X}$ by subtracting the mean vector $\mathbb{E}\textbf{x} = \frac{1}{n}\sum_{i = 1}^{n} \textbf{x}_i$ from each row. 
+\\ \\
+Next, we hope to find a unit vector $\textbf{v} \in \mathbb{R}^d$ that will capture the most ``variance in the data." What does this mean? We will ultimately project every data point $\textbf{x}_i$ onto $\textbf{v}$ by taking $\textbf{x}_i^\top \textbf{v}$, so we care about the variance of this quantity as $i$ ranges through the data from $1$ to $n$.
+\\ \\
+A brief aside on variance in probabilistic terms: Given a random variable $X$ with $\mathbb{E}X = 0$, we have the following version of Chebyshev's inequality: 
+\begin{gather*}
+\mathbb{P}(|X| \geq a) \leq \frac{\text{Var}(X)}{a^2}.
+\end{gather*}
+This inequality tells us that $\text{Var}(X)$ is a measure of how likely $X$ is to vary from its mean. Variance conveys information about the \textit{tail probabilities} of $X$; it shows us how likely $X$ is to take a highly unexpected value. 
+\\ \\
+In our case, highly unexpected values correspond to new information. That is why we want $\textbf{v}$ that maximizes the variance of the $\textbf{x}_i^\top \textbf{v}$: it would mean that $\text{span}(\textbf{v})$ is the 1-dimensional subspace of $\mathbb{R}^d$ containing the most information about the data.
+\subsection*{Finding the First Principal Component}
+We compute the sample variance of this projection amongst our $n$-many data points:
+\begin{align*}
+\text{sample variance} = \frac{1}{n}\sum_{i=1}^n (\textbf{x}_i^\top \textbf{v})^2 = \frac{1}{n}||\textbf{X}\textbf{v}||^2 = \frac{1}{n}\textbf{v}^\top \textbf{X}^\top \textbf{X} \textbf{v}.
+\end{align*}
+Thus, if we want to find the unit vector $\textbf{v}$ maximizing the variance, we've walked into a constrained optimization problem: 
+\[
+\max_{\textbf{v} \in \mathbb{R}^d} \textbf{v}^\top \textbf{X}^\top \textbf{X} \textbf{v} \:\text{ subject to } \: ||\textbf{v}|| = 1
+\]
+To solve this optimization problem, recall that for symmetric $\textbf{A} \in \mathbb{R}^{d \times d}$, for any $\textbf{v} \in \mathbb{R}^d$ with $||\textbf{v}|| = 1$, 
+\[ 
+\lambda_\text{min} (\textbf{A}) \leq \textbf{v}^\top\textbf{A}\textbf{v} \leq \lambda_\text{max}(\textbf{A})
+ \]
+ where for both bounds, equality holds iff $\textbf{v}$ is a corresponding eigenvector.  This  immediately yields that the \textit{first loading vector} $\textbf{v} = \textbf{v}_1$ is a unit eigenvector corresponding to the maximal eigenvalue of $\textbf{X}^\top\textbf{X}$.
+
+\subsection*{Finding More Principal Components}
+We often want more than one principal component. Given $k-1$ principal components, the problem of finding the $k$'th amounts to another constrained optimization problem: 
+\begin{align*}
+\max_{\textbf{v} \in \mathbb{R}^d} \textbf{v}^\top \textbf{X}^\top \textbf{X} \textbf{v} \:\text{ subject to } \: &||\textbf{v}|| = 1 \\
+&\textbf{v}^\top\textbf{v}_i = 0 \text{ for } i = 1 , \hdots, k-1.
+\end{align*}The \textit{$k$'th loading vector} $\textbf{v}_k$ is given by the following result:
+\subsubsection*{Theorem}
+The solution to the above optimization problem is $\textbf{v} = $ a unit eigenvector corresponding to the $k$'th largest eigenvalue of $\textbf{X}^\top\textbf{X}$.
+\subsubsection*{Proof}
+By induction on $k$. See source at end of note. $\hfill\square$
+\\ \\
+All this tells us that we can compute the first $k$ loading vectors by computing the SVD of $\textbf{X}$ and taking the first $k$ right-singular vectors. 
+
+\subsection*{Projecting onto the PCA Coordinate System}
+How do we project the data onto the subspace of $\mathbb{R}^d$ spanned by $\textbf{v}_1, \hdots, \textbf{v}_k$? For each data point $\textbf{x}_i$, we want to map 
+\[
+\textbf{x}_i \mapsto \text{Proj}_{\text{span}\{v_1,\hdots,v_k\}}(\textbf{x}_i) = \sum_{j=1}^k (\textbf{x}_i^\top \textbf{v}_j)\textbf{v}_j.
+\]
+Computationally, it's easier to handle all the $\textbf{x}_i$ at once through matrix multiplication. Let $\textbf{V}_k = (\textbf{v}_1, \hdots, \textbf{v}_k)$. Then the new data matrix $\widetilde{\textbf{X}}_k \in \mathbb{R}^{n \times k}$ is given by
+\[
+\widetilde{\textbf{X}}_k = \textbf{X}\textbf{V}_k\textbf{V}_k^\top.
+\]
+The rows of $\widetilde{\textbf{X}}_k$ are exactly what we wanted: the original data points projected onto the subspace spanned by $\textbf{v}_1, \hdots, \textbf{v}_k$.
+
+\subsection*{Geometric View of PCA}
+OLS could be viewed intuitively as finding the ``line of best fit." In it, we minimize the vertical distance between the data points and the fitted line. Similarly, we can view PCA as finding the ``subspace of best fit" insofar as the $k$-dimensional subspace we project onto minimizes perpendicular distance between it and the original data points in $\mathbb{R}^d$.
+\\ \\
+To show this, we need to show that our first loading vector minimizes the reconstruction error
+\[
+\sum_{i=1}^n ||\textbf{x}_i - P_\textbf{v}(\textbf{x}_i)||^2
+\]
+where $P_\textbf{v}(\textbf{x}_i) = (\textbf{x}_i^\top\textbf{v})\textbf{v}$ represents the projection of $\textbf{x}_i$ onto the span of $\textbf{v}$.
+\\ \\
+By the Pythagorean theorem, we have that
+\begin{align*}
+||\textbf{x}_i - P_\textbf{v}(\textbf{x}_i)||^2 + ||P_\textbf{v}(\textbf{x}_i)||^2 = ||\textbf{x}_i||^2 
+\end{align*}
+so that
+\begin{align*}
+\sum_{i=1}^n ||\textbf{x}_i - P_\textbf{v}(\textbf{x}_i)||^2 &= \sum_{i=1}^n ||\textbf{x}_i||^2-||P_\textbf{v}(\textbf{x}_i)||^2 \\
+&= \sum_{i=1}^n ||\textbf{x}_i||^2 - \sum_{i=1}^n (\textbf{x}_i^\top\textbf{v})^2.
+\end{align*}
+The first term is constant in $\textbf{v}$, so minimizing reconstruction error amounts to minimizing $\sum_{i=1}^n (\textbf{x}_i^\top\textbf{v})^2$, which is precisely our objective in PCA. 
+
+\subsection*{Low-Rank Approximation}
+Let $||\cdot||$ be any unitary-invariant norm on $\mathbb{R}^{n \times d}$. A family of such norms is the collection of induced $\ell^p$-norms for matrices: 
+\[
+||\textbf{A}||_p = \sup_{\textbf{x} \neq 0} \frac{||\textbf{A}\textbf{x}||_p}{||\textbf{x}||_p}
+\]
+of which the operator ($p = 1$) and the spectral ($p=2$) norms are examples.
+\\ \\
+Take a matrix $\textbf{X} \in \mathbb{R}^{n \times d}$, where $\mathbb{R}^{n \times d}$ is equipped with our unitary-invariant norm $||\cdot||$. If we seek the best rank-$k$ approximation to $\textbf{X}$ with respect to $||\cdot||$, then PCA comes in handy: 
+\subsubsection*{Theorem (Eckart-Young-Mirsky)}
+Our PCA solution $\widetilde{\textbf{X}}_k$ is the best rank-$k$ approximation to $\textbf{X}$ with respect to $||\cdot||$ in the sense that for any rank-$r$ ($r \leq k$) matrix $\textbf{Y} \in \mathbb{R}^{n \times d}$, 
+\[
+||\textbf{X} - \widetilde{\textbf{X}}_k|| \leq ||\textbf{X} - \textbf{Y}||.
+\]
+This theorem tells us that the process of projecting our data onto a subspace via PCA amounts to finding the best rank-$k$ approximation of $\textbf{X}$. 
+
+\subsection*{Sources}
+A more thorough treatment of PCA can be found here: \url{https://www.eecs189.org/static/notes/n10.pdf}
+\end{document}

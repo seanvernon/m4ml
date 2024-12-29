@@ -1,0 +1,57 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+% The following, up to \title, is from this StackOverflow post: https://stackoverflow.com/a/3175141
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\title{Note $n$}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Taylor's Theorem}
+Taylor's theorem is a result from one-dimensional calculus which states that $k$-times continuously differentiable functions can be approximated around a point $a$ by a polynomial $h_a$ of degree $k$. While we will not approximate functions by Taylor polynomials in this class, we will use this theorem today to prove important results about minima which will help us solve non-convex optimization problems. This theorem in the vector calculus case, for polynomials up to degree 2, is reproduced here:\\\\ Suppose $f: \mathbb{R}^d \rightarrow \mathbb{R}$ is continuously differentiable, and let $\mathbf{h} \in \mathbb{R}^d$. Then $\exists t \in (0, 1)$ s.t. $$f(\mathbf{x + h}) = f(\mathbf{x}) + \nabla f(\mathbf{x} + t\mathbf{h})^{\top}\mathbf{h}$$ Furthermore, if $f$ is twice continuously differentiable, then there exists $t \in (0, 1)$ s.t. $$f(\mathbf{x + h}) = f(\mathbf{x}) + \nabla f(\mathbf{x})^{\top}\mathbf{h} + \frac{1}{2}\mathbf{h}^{\top}\nabla^2f(\mathbf{x} + t\mathbf{h})\mathbf{h}$$ The proof of this theorem is beyond the scope of the course; it suffices to show that for a function $f$ and a Taylor approximation $h_{\mathbf{a}}$, $$\lim\limits_{\mathbf{x \rightarrow a}} \frac{f(\mathbf{x}) - h_\mathbf{a}(\mathbf{x})}{(\mathbf{x} - \mathbf{a})^k} = 0$$
+
+\section{Finding Minima with Taylor's Theorem}
+
+\clearpage
+\section*{Application: Newton's Method}
+
+\clearpage
+
+\section*{Application: Gauss-Newton Algorithm}
+
+\end{document}

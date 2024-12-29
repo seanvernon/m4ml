@@ -1,0 +1,129 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+% The following lines, up to \title, are from this StackExchange post: http://tex.stackexchange.com/questions/14071/ddg#14072
+\makeatletter
+\renewcommand*\env@matrix[1][\arraystretch]{%
+  \edef\arraystretch{#1}%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{*\c@MaxMatrixCols c}}
+\makeatother
+
+\title{Homework 5}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+Due Date: March 11 \\
+Name: \\
+Student ID:
+
+\section{Working with Adjoints}
+Let $\textbf{A} \in \mathbb{R}^{m \times n}$.
+\begin{enumerate}[label=(\alph*)]
+\item Show that $\ker \textbf{A}^\top \textbf{A} = \ker \textbf{A}$. \\
+{\color{blue} \begin{align*}
+\mathbf{v} \in \text{ker}(\mathbf{A^{\top}A}) &\iff \mathbf{A^{\top}Av} = 0 \\
+&\iff \mathbf{Av} \in \text{ker}(\mathbf{A^{\top}})\\
+&\iff \mathbf{Av} \in \text{range}(\mathbf{A})^{\perp} \text{ by FTLA} \\
+&\iff \mathbf{Av = 0} \text{ since } \mathbf{Av} \in \text{range}(\mathbf{A}) \\
+&\iff \mathbf{v} \in \text{ker}(\mathbf{A})
+\end{align*} Therefore, $\text{ker}(\mathbf{A^{\top}A}) = \text{ker}(\mathbf{A})$. $\hfill\square$}
+\item Deduce that $\text{rank}( \textbf{A}^\top \textbf{A}) = \text{rank}(\textbf{A})$. \\
+{\color{blue} We have that $\text{rank}(\mathbf{A}) + \text{dim ker}(\mathbf{A}) = n = \text{rank}(\mathbf{A^{\top}A}) + \text{dim ker}(\mathbf{A^{\top}A})$. Since $\text{dim ker}(\mathbf{A}) = \text{dim ker}(\mathbf{A^\top A})$, $\text{rank}(\mathbf{A}) = \text{rank}(\mathbf{A^{\top}A})$.}
+\item Suppose $\mathbf{A}$ is square. Show that $\textbf{A}$ and $\textbf{A}^\top$ have the same eigenvalues. \\
+{\color{blue} \begin{align*} 
+p_{\mathbf{A}}(\lambda) &= \det (\mathbf{A} - \lambda\mathbf{I}) \\
+&= \det(\mathbf{A} - \lambda\mathbf{I})^{\top} \\
+&= \det(\mathbf{A^{\top}} - \lambda\mathbf{I}) \\
+&= p_{\mathbf{A^{\top}}}(\lambda)
+\end{align*} as determinant is invariant under transpose. Since the two matrices have the same characteristic polynomial, they have the same eigenvalues.}
+\item Deduce that $\text{rank}(\textbf{A}) = \text{rank}(\textbf{A}^\top)$. \\
+{\color{blue} Because the matrices have the same eigenvalues, they have the same number of non-zero eigenvalues. Therefore, they have the same rank.}
+\end{enumerate}
+
+\section{SVD}
+\begin{enumerate}[label=(\alph*)]
+\item Let $\textbf{A} \in \mathbb{R}^{m \times n}$. Let $\textbf{A} = \textbf{U}\Sigma\textbf{V}^\top$ be its SVD. Find the spectral decompositions of $\textbf{A}^\top\textbf{A}$ and $\textbf{A}\textbf{A}^\top$ in terms of $\mathbf{U, \Sigma, V}$. \\
+{\color{blue} \begin{align*}
+\mathbf{A^{\top}A} &= \mathbf{(U\Sigma V^{\top})^{\top}U\Sigma V^{\top}} \\
+&= \mathbf{V\Sigma UU^{\top}\Sigma V^{\top} } \\
+&= \mathbf{V\Sigma^2V^{\top}}
+\end{align*} \begin{align*}
+\mathbf{AA^{\top}} &= \mathbf{U\Sigma V^{\top}(U\Sigma V^{\top})^{\top}} \\
+&= \mathbf{U\Sigma V^{\top}V\Sigma U^{\top}} \\
+&= \mathbf{U\Sigma U^{\top}}
+\end{align*}}
+\item Prove: If $\textbf{A} \in \mathbb{R}^{n \times n}$ is PSD, then the spectral decomposition of $\textbf{A}$ coincides with the SVD of $\textbf{A}$. \\
+{\color{blue} (The technical details involving rows or columns of zeros are omitted.) Let $\mathbf{A = U\Sigma V^{\top}}$ by SVD, and $\mathbf{A = U'\Lambda U'^{\top}}$ by the Spectral Theorem. We seek to show that $\mathbf{U = U' = V}$ and $\mathbf{\Sigma = \Lambda}$. Recall that $\mathbf{V}$ is the unitary matrix in the spectral decomposition $\mathbf{A^{\top}A = V\Sigma}^2\mathbf{V^{\top}}$. But $\mathbf{A^{\top}A} = \mathbf{(U'\Lambda U'^{\top})^{\top}U'\Lambda U'^{\top} = U'\Lambda}^2\mathbf{U'^{\top}}$. So $\mathbf{V = U'}$, and since $\mathbf{\Lambda}$ and $\mathbf{\Sigma}$ are PSD, $\mathbf{\Lambda = \Sigma}$. So $\mathbf{U\Sigma V^{\top} = U'\Sigma V^{\top}}$, and so $\mathbf{U} = \mathbf{U'}$.}
+\item Let $\textbf{A} \in \mathbb{R}^{m \times n}$, and let $\textbf{A} = \textbf{U}\Sigma\textbf{V}^\top$ be its SVD. If $\textbf{V} = (\textbf{v}_1, \hdots, \textbf{v}_n)$, $\textbf{U} = (\textbf{u}_1, \hdots, \textbf{u}_m)$, and $r = \text{rank}(\textbf{A})$, then let
+\begin{gather*}
+\textbf{V}_r = (\textbf{v}_1, \hdots, \textbf{v}_r) \\
+\textbf{U}_r = (\textbf{u}_1, \hdots, \textbf{u}_r).
+\end{gather*}  
+Show that $\textbf{v}_1, \hdots, \textbf{v}_r$ ``diagonalize" $\textbf{A}$ in the following way: For $i = 1,\hdots, r$, show that $\textbf{A}\textbf{v}_i = \sigma_i\textbf{u}_i$. \\
+{\color{blue} Because $\mathbf{V}$ is unitary, $\mathbf{V^{\top}v}_i$ will be 0 in every index except $(\mathbf{Vv}_i)_i = 1$. Since $\mathbf{Av}_i = \mathbf{U\Sigma V^{\top}v}_i$, $$\mathbf{A}\mathbf{v}_i = \mathbf{U}\begin{bmatrix} 0 & \hdots & \sigma_i & \hdots & 0 \end{bmatrix}^{\top} = \sigma_i\mathbf{u}_i$$ }
+\item Let 
+\[
+\textbf{A} = \begin{pmatrix}
+3 & 2 & 2 \\
+2 & 3 & -2
+\end{pmatrix}.
+\]
+Compute the SVD of $\textbf{A}$. \\
+{\color{blue} We first compute $\mathbf{A^{\top}A}$: $$\mathbf{A^{\top}A} = \begin{bmatrix} 3 & 2 \\ 2 & 3 \\ 2 & -2 \end{bmatrix}\begin{bmatrix} 3 & 2 & 2 \\ 2 & 3 & -2 \end{bmatrix} = \begin{bmatrix} 13 & 12 & 2 \\ 12 & 13 & -2 \\ 2 & -2 & 8 \end{bmatrix}$$ Next, we find the eigenvalues of $\mathbf{A^{\top}A}$: \begin{align*}
+p_{\mathbf{A^{\top}A}}(\lambda) &= \det\begin{bmatrix} 13 - \lambda & 12 & 2 \\ 12 & 13 - \lambda & -2 \\ 2 & -2 & 8 - \lambda \end{bmatrix} \\
+&= (13 - \lambda)\det\begin{bmatrix}13 - \lambda & -2 \\ -2 & 8 - \lambda \end{bmatrix} - 12\det\begin{bmatrix} 12 & -2 \\ 2 & 8 - \lambda\end{bmatrix} + 2\det\begin{bmatrix} 12 & 13 - \lambda \\ 2 & -2 \end{bmatrix} \\
+&= (13 - \lambda)((13 - \lambda)(8 - \lambda) - 4) - 12(12(8 - \lambda) + 4) + 2(-24 - 2(13 - \lambda)) \\
+&= (13 - \lambda)(100 - 21\lambda + \lambda^2) - 12(100 - 12\lambda) + 2(-50 + 2\lambda) \\
+&=  - \lambda^3 + 34\lambda^2 - 225\lambda 
+\end{align*} It is immediately clear that one eigenvalue is 0, as expected, since $\text{rank}(\mathbf{A}) = 2$. To find the other two, we factor: $$-\lambda^2 + 34\lambda - 225 = -(\lambda - 9)(\lambda - 25)$$ So the eigenvalues of $\mathbf{A^{\top}A}$ are 0, 9, and 25. We now find the eigenvectors of $\mathbf{A^{\top}A}$. We first find the eigenvector corresponding to $\lambda_1 = 25$: \begin{align*}
+\mathbf{v}_1 &\in \ker(\mathbf{A^{\top}A} - 25\mathbf{I}) \\
+&\in \ker\begin{bmatrix}[1.5] -12 & 12 & 2 \\ 12 & -12 & -2 \\ 2 & -2 & -17 \end{bmatrix}
+\end{align*} Observe that $(\mathbf{A^{\top}A} - 25\mathbf{I})_1 = -(\mathbf{A^{\top}A} - 25\mathbf{I})_2$. Therefore, $[1\ 1\ 0]^{\top}$ is an eigenvector of $\mathbf{A}$ corresponding to $\lambda_1 = 25$. We turn next to $\lambda_2 = 9$:  \begin{align*}
+\mathbf{v}_2 &\in \ker(\mathbf{A^{\top}A} - 9\mathbf{I}) \\
+&\in \ker\begin{bmatrix}[1.5] 4 & 12 & 2 \\ 12 & 4 & -2 \\ 2 & -2 & -1 \end{bmatrix}
+\end{align*} Observe that $(\mathbf{A^{\top}A} - 9\mathbf{I})_2 = (\mathbf{A^{\top}A} - 9\mathbf{I})_1 + 4(\mathbf{A^{\top}A} - 9\mathbf{I})_3$. Therefore, $[1\ -1\ 4]^{\top}$ is an eigenvector of $\mathbf{A}$ corresponding to $\lambda_2 = 9$. We turn next to $\lambda_3 = 0$: \begin{align*}
+\mathbf{v}_3 &\in \ker(\mathbf{A^{\top}A}) \\
+&\in \ker\begin{bmatrix}[1.5] 13 & 12 & 2 \\ 12 & 13 & -2 \\ 2 & -2 & 8 \end{bmatrix}
+\end{align*} Observe that $2(\mathbf{A^{\top}A})_1 - 2(\mathbf{A^{\top}A})_2 = (\mathbf{A^{\top}A})_3$. Therefore, $[2\ -2\ -1]^{\top}$ is an eigenvector of $\mathbf{A}$ corresponding to $\lambda_3 = 0$. Note that the eigenvectors we have collected are already an orthogonal basis for $\mathbb{R}^3$; we just need to normalize them to find the column vectors of $\mathbf{V}$. Therefore, $$\mathbf{V} = \begin{bmatrix}[1.5] \frac{1}{\sqrt{2}} & \frac{1}{3\sqrt{2}} & \frac{2}{3} \\ \frac{1}{\sqrt{2}} & -\frac{1}{3\sqrt{2}} & -\frac{2}{3} \\ 0 & \frac{4}{3\sqrt{2}} & -\frac{1}{3} \end{bmatrix}, \mathbf{\Lambda} = \begin{bmatrix} 25 &  0 & 0 \\ 0 & 9 & 0 \\ 0 & 0 & 0 \end{bmatrix}, \mathbf{A^{\top}A = V\Lambda V^{\top}}$$ So, for our SVD, we have $$\mathbf{\Sigma} = \begin{bmatrix} 5 & 0 & 0 \\ 0 & 3 & 0 \\ 0 & 0 & 0 \end{bmatrix}, \mathbf{V} = \mathbf{V} \text{ from spectral decomposition}$$ We can then solve for $\mathbf{U}$: \begin{align*}
+\mathbf{U'} &= \mathbf{AV\Sigma}^{-1} \\
+&= \begin{bmatrix} 3 & 2 & 2 \\ 2 & 3 & -2 \end{bmatrix}\begin{bmatrix}[1.5] \frac{1}{\sqrt{2}} & \frac{1}{3\sqrt{2}} & \frac{2}{3} \\ \frac{1}{\sqrt{2}} & -\frac{1}{3\sqrt{2}} & -\frac{2}{3} \\ 0 & \frac{4}{3\sqrt{2}} & -\frac{1}{3} \end{bmatrix}\begin{bmatrix} \frac{1}{5} & 0 & 0 \\ 0 & \frac{1}{3} & 0 \\ 0 & 0 & 0 \end{bmatrix} \\
+&= \begin{bmatrix} 3 & 2 & 2 \\ 2 & 3 & -2 \end{bmatrix}\begin{bmatrix}[1.5] \frac{1}{5\sqrt{2}} & \frac{1}{9\sqrt{2}} & 0 \\ \frac{1}{5\sqrt{2}} & -\frac{1}{9\sqrt{2}} & 0 \\ 0 & \frac{4}{9\sqrt{2}} & 0 \end{bmatrix} \\
+&= \begin{bmatrix} \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}} & \frac{-1}{\sqrt{2}} \end{bmatrix}
+\end{align*} So the SVD of $\mathbf{A}$ is $$\mathbf{A} = \begin{bmatrix} \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 0 \\ \frac{1}{\sqrt{2}} & \frac{-1}{\sqrt{2}} & 0 \end{bmatrix}\begin{bmatrix} 5 & 0 & 0 \\ 0 & 3 & 0 \\ 0 & 0 & 0 \end{bmatrix}\begin{bmatrix}[1.5] \frac{1}{\sqrt{2}} & \frac{1}{3\sqrt{2}} & \frac{2}{3} \\ \frac{1}{\sqrt{2}} & -\frac{1}{3\sqrt{2}} & -\frac{2}{3} \\ 0 & \frac{4}{3\sqrt{2}} & -\frac{1}{3} \end{bmatrix}^{\top} $$}
+\item Let 
+\[
+\textbf{A} = \begin{pmatrix}
+3 & 2 & 2 \\
+2 & 3 & -2
+\end{pmatrix}.
+\]
+Find orthonormal bases for the four fundamental subspaces of $\textbf{A}$. \\
+{\color{blue} From FTLA part II and the SVD from (d), we have $$
+\begin{bmatrix}[1.5] \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}} \\ 0 \end{bmatrix}, \begin{bmatrix}[1.5] \frac{1}{3\sqrt{2}} \\ -\frac{1}{3\sqrt{2}} \\ \frac{4}{3\sqrt{2}} \end{bmatrix} \text{ are a basis for range}(\mathbf{A}^{\top})$$ $$
+\begin{bmatrix}[1.5] \frac{2}{3} \\ -\frac{2}{3} \\ -\frac{1}{3} \end{bmatrix} \text{ is a basis for ker}(\mathbf{A})$$ $$
+\begin{bmatrix}[1.5] \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}}\end{bmatrix}, \begin{bmatrix}[1.5] \frac{1}{\sqrt{2}} \\ -\frac{1}{\sqrt{2}} \end{bmatrix} \text{ are a basis for range}(\mathbf{A})$$ $$
+\mathbf{A^{\top}} \text{ has a trivial kernel}$$}
+\end{enumerate}
+
+\section{PCA}
+Let $$\mathbf{X} = \begin{bmatrix} -1 & 1 \\ 1 & -1 \\ -2 & -2 \\ 0 & 0 \\ 2 & 2 \end{bmatrix}$$ Note that the SVD of $\mathbf{X}$ is $$\text{SVD}(\mathbf{X}) = \begin{bmatrix} 0 & 0.7 & -0.5 & 0 & 0.5 \\ 0 & -0.7 & -0.5 & 0 & 0.5 \\ -0.7 & 0 & 0.5 & 0 & 0.5 \\ 0 & 0 & 0 & 1 & 0 \\ 0.7 & 0 & 0.5 & 0 & 0.5 \\ \end{bmatrix}\begin{bmatrix} 4 & 0 \\ 0 & 2 \\ 0 & 0 \\ 0 & 0 \\ 0 & 0 \end{bmatrix}\begin{bmatrix}0.7 & 0.7 \\ -0.7 & 0.7 \end{bmatrix}$$ Compute the principal components of $\mathbf{X}$. \\
+{\color{blue} The principal components of $\mathbf{X}$ are unit eigenvectors of $\mathbf{X^{\top}X}$. In this case, $$\mathbf{v}_1 = \begin{bmatrix}[1.5] \frac{1}{\sqrt{2}} \\ -\frac{1}{\sqrt{2}}  \end{bmatrix}, \mathbf{v}_2 =  \begin{bmatrix}[1.5] \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}}  \end{bmatrix}$$}
+\end{document}

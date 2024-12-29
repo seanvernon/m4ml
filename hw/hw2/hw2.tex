@@ -1,0 +1,77 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+\title{Homework 2}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+Due Date: February 19 \\
+Name: \\
+Student ID:
+
+\section*{Instructions for Submission}
+Please include your name and student ID at the top of your homework submission. You may submit handwritten solutions or typed ones (\LaTeX\ preferred). If you at any point write code to help you solve a problem, please include your code at the end of the homework assignment, and mark which code goes with which problem. Homework is due by start of lecture on the due date; it may be submitted in-person at lecture or by emailing a PDF to both facilitators.
+
+\section{Comparing Vector Spaces}
+\begin{enumerate}[label=\arabic*.]
+	\item Exhibit a basis for $\mathbb{R}^3 \coloneqq \mathbb{R} \oplus \mathbb{R} \oplus \mathbb{R}$.
+	\item Exhibit a basis for $\mathbb{P}^2 \coloneqq \{f: \mathbb{R} \to \mathbb{R} : f(x) = a_0 + a_1x + a_2x^2 \text{ for some } a_0,a_1,a_2 \in \mathbb{R} \}$, the space of 3rd degree polynomials with real coefficients. Note that your basis elements should be polynomials. 
+	\item Conclude that $\mathbb{R}^3$ and $\mathbb{P}^2$ are \textit{isomorphic} (i) by a dimension argument and (ii) by exhibiting an \textit{isomorphism} between them. When two vector spaces $V,W$ are isomorphic, we write $V \cong W$. 
+\end{enumerate}
+
+\section{Characterizing the Inner Product}
+\begin{enumerate}[label=\arabic*.]
+	\item Let $\langle \cdot, \cdot \rangle$ be an inner product on $\mathbb{R}^n$. Show that there exists $A \in \mathbb{R}^{n\times n}$ with $A^\top = A$ such that $\langle \textbf{x}, \textbf{y} \rangle = \textbf{x}^\top A \textbf{y}$ for all $\textbf{x}, \textbf{y} \in \mathbb{R}^n$.  (Hint: what is the action of $\langle \cdot, \cdot \rangle$ on the standard basis?)
+	%Conversely, show that if $A \in \mathbb{R}^{n\times n}$ satisfies $A^\top = A$ and $\textbf{x}^\top A \textbf{y} \geq 0$ for all $\textbf{x} \neq \textbf{y} \in \mathbb{R}^n$ and $\textbf{z}^\top A \textbf{z} = 0$ for all $\textbf{z} \in \mathbb{R}^n$, then $\langle \textbf{x}, \textbf{y} \rangle_A \coloneqq \textbf{x}^\top A \textbf{y}$ is an inner product on $\mathbb{R}^n$.
+\end{enumerate}
+
+\section{Linear Maps} 
+Let $V,W$ be vector spaces, and let $T: V \to W$ be a linear map. 
+\begin{enumerate}[label=\arabic*.]
+	\item Show that $T$ is one-to-one (a.k.a. injective) if and only if the kernel of $T$ is trivial, i.e. $\{v \in V: T(v) = \textbf{0}_W\} = \{\textbf{0}_V\}$. 
+	\item Let $\{\textbf{b}_1, ... , \textbf{b}_n\}$ be a basis for $V$, and let $T$ be such that $\{T(\textbf{b}_1), ... , T(\textbf{b}_n)\}$ is a basis for $W$. Show that $T$ is an isomorphism. 
+\end{enumerate}
+
+\section{Dual Spaces (Optional)}
+Given a vector space $V$, we can form the vector space of linear maps from $V$ to $\mathbb{R}$, called the \textit{dual space} of $V$. Formally, the dual space is given by $V^* \coloneqq L(V, \mathbb{R})$, and its elements are known as \textit{linear functionals} (or, in some contexts, \textit{covectors}). \textit{Note that the questions in this section are optional.}
+\begin{enumerate}[label=\arabic*.]
+	\item Let $V$ be a real vector space with basis $B = \{\textbf{b}_1, ... , \textbf{b}_n\}$. Exhibit a basis for $V^*$ and conclude that $V \cong V^*$. 
+	\item Consider $V^{**}$, the dual space of the dual space of $V$, called the \textit{double dual space} of $V$. Without choosing a basis for $V$, construct an isomorphism between $V$ and $V^{**}$. Since such an isomorphism exists, we say that $V$ and $V^{**}$ are \textit{canonically isomorphic}.
+	\item Let $H$ be a (real) Hilbert space, i.e. an inner product space (perhaps infinite-dimensional) that is complete with respect to the metric induced by its inner product. Form the \textit{continuous dual space} of $H$, $H' = \{\xi \in H^*: \xi \text{ is continuous} \}$. It turns out that $H$ is canonically isomorphic to its continuous dual; this result in functional analysis known as the Riesz Representation Theorem. Give a guess as to the canonical isomorphism $H \to H'$. (Hint: It depends completely upon the coordinate-wise linearity of the inner product.)
+\end{enumerate}
+\section{Projections}
+A set of vectors is \textit{orthogonal} if each vector is pairwise orthogonal to all the rest. An orthogonal set of vectors is \textit{orthonormal} if each vector has norm 1 (i.e., $\langle \mathbf{v}, \mathbf{v} \rangle = 1$).
+\begin{enumerate}[label=\arabic*.]
+	\item Show that any set of orthonormal vectors is linearly independent. 
+	\item Show that, for a space $V$ with dimension $d$, a set of $d$ orthonormal vectors in $V$ is a basis for $V$.
+	\item Suppose we have a vector space $V$, a subspace $W \subset V$, and a vector $\mathbf{v} \in V$ such that $\mathbf{v} \notin W$. Let $\{\mathbf{w}_1, \ldots, \mathbf{w}_k\}$ be an orthonormal basis for $W$. 
+	\begin{enumerate}[label=(\alph*)]
+	\item Show that $$\mathbf{v}_w = \sum\limits_{i=1}^k \langle \mathbf{v}, \mathbf{w}_i \rangle\mathbf{w}_i$$ is an orthogonal projection of $\mathbf{v}$ into $W$.
+	\item Let $\mathbf{P}_W$ be a matrix such that $\mathbf{P}_W\mathbf{v} = \mathbf{v}_w$. $\mathbf{P}_W$ is known as a \textit{projection matrix}.
+	\begin{enumerate}[label=\roman*.]
+	\item Show that $\mathbf{P}_W^2 = \mathbf{P}_W$.
+	\item Show that $\mathbf{P}_W^{\top} = \mathbf{P}_W$.
+	\item Show that $\mathbf{P}_W\mathbf{w} = \mathbf{w}$ for all $w \in W$. Conclude that $\mathbf{P}_W$ has the same action as the identity matrix $\mathbf{I}$ on vectors in $W$.
+	\end{enumerate}
+	\end{enumerate}
+	\item Let $V = \mathbb{R}^4$ and $U \cong \mathbb{R}^2$ such that $\{e_1, e_2\}$ is a basis for $U$ (i.e. all vectors in $U$ take the form $(a, b, 0, 0)$ with respect to the standard basis for $\mathbb{R}^4$). Note that $U$ is a subspace of $V$. Determine the matrix form of $\mathbf{P}_{U}$, and show that it has the same properties as $\mathbf{P}_W$ from problem 3.
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,55 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+\title{Homework 4}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+Due Date: March 4 \\
+Name: \\
+Student ID:
+
+\section*{Instructions for Submission}
+Please include your name and student ID at the top of your homework submission. You may submit handwritten solutions or typed ones (\LaTeX\ preferred). If you at any point write code to help you solve a problem, please include your code at the end of the homework assignment, and mark which code goes with which problem. Homework is due by start of lecture on the due date; it may be submitted in-person at lecture or by emailing a PDF to both facilitators.
+
+\section{Projections}
+Let $\mathbf{P}: V \to V$ be a (not necessarily orthogonal) projection operator, i.e. $\mathbf{P}^2 = \mathbf{P}$. 
+\begin{enumerate}
+\item Show that all eigenvalues of $\mathbf{P}$ are either 0 or 1. 
+\item Show that tr$(\mathbf{P})$ = rank$(\mathbf{P})$. 
+\item Prove that $\mathbf{P}$ is the identity matrix when restricted to its range. That is, for any vector $\mathbf{v} \in \text{range}(\mathbf{P})$, $\mathbf{Pv} = \mathbf{v}$. 
+\item Prove that $\mathbf{P}$ is either not invertible or its own inverse. 
+\end{enumerate}
+
+\section{Using the Spectral Theorem}
+\begin{enumerate}[label=\arabic*.]
+\item Prove that the matrix $$\mathbf{A} = \begin{bmatrix} 3 & 2 \\ 2 & 3 \end{bmatrix}$$ is normal. 
+\item Compute the eigenvalues of $\mathbf{A}$.
+\item Compute the eigenvectors of $\mathbf{A}$.
+\item Using the results of (a), (b), and (c), combined with your knowledge of the Spectral Theorem, compute the eigendecomposition of $\mathbf{A}$ (in particular, find the orthogonal matrix $\mathbf{Q}$ and diagonal matrix $\mathbf{\Lambda}$ such that $\mathbf{A} = \mathbf{Q\Lambda Q^{\top}}$).
+\item Compute $\mathbf{A}^{20}$.
+\end{enumerate}
+
+\section{PSD Matrices}
+\begin{enumerate}[label=\arabic*.]
+\item Prove that the two definitions given for positive semi-definite matrices are equivalent. \textit{(Hint: use Rayleigh quotients.)}
+\item Prove that, for any matrix $\mathbf{X}$ and any scalar $\lambda > 0$, $\mathbf{X^{\top}X} + \lambda\mathbf{I}$ is invertible.
+\end{enumerate}
+
+\end{document}

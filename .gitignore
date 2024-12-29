@@ -1,0 +1,8 @@
+*.aux
+*.log
+*.bcf
+*.out
+*.run.xml
+*.synctex.gz
+.DS_Store
+.Trashes
