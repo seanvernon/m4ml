@@ -6,3 +6,4 @@
 *.synctex.gz
 .DS_Store
 .Trashes
+__pycache__
