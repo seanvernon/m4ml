@@ -1,0 +1,72 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+\title{Homework 8 Solutions}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+Due Date:  \\
+Name: \\
+Student ID:
+
+\section*{Instructions for Submission}
+Please include your name and student ID at the top of your homework submission. You may submit handwritten solutions or typed ones (\LaTeX\ preferred). If you at any point write code to help you solve a problem, please include your code at the end of the homework assignment, and mark which code goes with which problem. Homework is due by start of lecture on the due date; it may be submitted in-person at lecture or by emailing a PDF to both facilitators.
+
+\section{Examples of Convex Functions}
+\begin{enumerate}[label=\arabic*.]
+\item Give an example of a convex function. \\
+{\color{blue} One such example is $f(x) = |x|$. Proofs of this and other examples are omitted.}
+\item Give an example of a non-convex function. \\
+{\color{blue} $f(x) = x$}
+\item Give an example of a function which is strictly convex. \\
+{\color{blue} Again, $f(x) = |x|$ is such a function.}
+\item Give an example of a function which is convex, but not strictly convex. \\
+{\color{blue} $f(x) = 0$}
+\item Give an example of a function which is strictly convex, but not strongly convex. \\
+{\color{blue} $f(x) = x^4$}
+\item Give an example of a function which is 2-strongly convex. \\
+{\color{blue} $f(\mathbf{x}) = ||\mathbf{x}||_2^2$}
+\item Give an example of a function which is convex but has no minima. \\
+{\color{blue} $f(x) = e^x$}
+\end{enumerate}
+
+\section{Feasible Sets}
+For the following problems, we will consider how the feasible set of solutions $\mathcal{X}$ changes the feasibility of optimization. We will be attempting to optimize the strictly convex function $f(x) = x^2$.
+\begin{enumerate}[label=\arabic*.]
+\item Is there a unique global minimum of $f$ if $\mathcal{X} = \mathbb{R}$? If so, what is it? Is this set convex? \\
+{\color{blue} $x = 0$. The feasible set is convex.}
+\item What if $\mathcal{X} = \{ 1\}$? Is this set convex? \\
+{\color{blue} $x = 1$. The feasible set is convex.}
+\item What if $\mathcal{X} = \mathbb{R} \char`\\ \{ 0 \}$? Is this set convex? \\
+{\color{blue} In this case, there is no unique global minimum. For any point $x \in \mathcal{X}$, there is another point $y \in \mathcal{X}$ such that $f(y) < f(x)$. The feasible set is non-convex.}
+\item Let $\mathcal{X} = (-\infty, -1] \cup [0, \infty )$. Is this set convex? What are the local minima of $f$ in this set? Are all local minima also global minima? \\
+{\color{blue} This set is not convex. $x = -1$ and $x = 0$ are both local minima, but only $x = 0$ is a global minimum.}
+\item Let $\mathcal{X} = (-\infty, -1] \cup [1, \infty )$. Is this set convex? What are the local minima of $f$ in this set? Are all local minima also global minima? \\
+{\color{blue} This set is not convex. $x = -1$ and $x = 1$ are both local and global minima.}
+\end{enumerate}
+
+\section{Convexity Proofs}
+\begin{enumerate}[label=\arabic*.]
+\item Let $f$ and $g$ be convex functions. Show that $h(\mathbf{x}) = \max \{f(\mathbf{x}), g(\mathbf{x})\}$ is convex.
+\item Let $f$ be a convex function and $g$ be a strictly convex function. Show that $f + g$ is strictly convex.
+\item Let $f$ be a convex function and $g$ be an $m$-strongly convex function. Show that $f + g$ is m-strongly convex.
+\item (Optional) Recall that on a vector space $V$, we can define an inner product $\langle\cdot, \cdot\rangle$ on $V$ which returns another vector in $V$. Suppose $f$ is differentiable. Show that $f$ is convex if and only if $f(\mathbf{x}) \geq f(\mathbf{y}) + \langle\nabla f(\mathbf{y}), \mathbf{x - y}\rangle$ for all $\mathbf{x, y} \in \text{dom}f$.
+\end{enumerate}
+
+\end{document}
