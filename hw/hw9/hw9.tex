@@ -1,0 +1,57 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+\title{Homework 9}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+Due Date:  \\
+Name: \\
+Student ID:
+
+\section*{Instructions for Submission}
+Please include your name and student ID at the top of your homework submission. You may submit handwritten solutions or typed ones (\LaTeX\ preferred). If you at any point write code to help you solve a problem, please include your code at the end of the homework assignment, and mark which code goes with which problem. Homework is due by start of lecture on the due date; it may be submitted in-person at lecture or by emailing a PDF to both facilitators.
+
+\section{Practice with Newton's Method}
+\begin{enumerate}[label=\arabic*.]
+\item Let $f(x) = x^4$. For any given $x_0$, what will the update rule given by Newton's method be? Will it lead us to the function's minimum? Why or why not?
+\item Let $f(x) = x^3$. For any given $x_0$, what will the update rule given by Newton's method be? Will it lead us to the function's minimum? Why or why not?
+\end{enumerate}
+
+\section{Gauss-Newton Algorithm Proofs}
+\begin{enumerate}[label=\arabic*.]
+\item Let $f(\mathbf{x}; \beta)$ be a nonlinear function from $\mathbb{R}^n \rightarrow \mathbb{R}$ parameterized by an $m$-dimensional vector $\beta$. Define $L(\beta) = \sum_{i=1}^n (y_i - f(\mathbf{x_i}; \beta))^2 = ||\mathbf{r}(\beta)||_2^2$ be the loss function we wish to minimize. (Note that this is an equivalent formulation to how we present the Gauss-Newton algorithm in note 9.)
+\begin{enumerate}[label=(\alph*)]
+\item Show that $\nabla L(\beta) = \mathbf{J_r}(\beta)\mathbf{r}(\beta)$.
+\item Show that $\nabla^2 L(\beta) = \mathbf{J_r}(\beta)^\top\mathbf{J_r}(\beta) + \sum_{i=1}^n r_i(\beta) \nabla^2 r_i(\beta)$.
+\end{enumerate}
+\end{enumerate}
+
+\section{Vector Calculus Review}
+\begin{enumerate}[label=\arabic*.]
+\item Let $f$ be a twice-differentiable function.
+\begin{enumerate}[label=(\alph*)]
+\item Show that $f$ is convex if and only if $\nabla^2 f(\mathbf{x}) \geq \mathbf{0}$ for all $x \in \text{dom} f$.
+\item Show that if $\nabla^2 f(\mathbf{x}) > \mathbf{0}$ for all $\mathbf{x} \in \text{dom} f$, then $f$ is strictly convex.
+\item Show that $f$ is $m$-strongly convex if and only if $\nabla^2 f(\mathbf{x}) \geq m\mathbf{I}$ for all $\mathbf{x} \in \text{dom} f$.
+\item Let $t$ be the second-order Taylor approximation of $f$ about $\mathbf{x}$. Show that $t$ is convex if and only if $\nabla^2 f(\mathbf{x})$ is positive semi-definite.
+\end{enumerate}
+\end{enumerate}
+
+\end{document}
