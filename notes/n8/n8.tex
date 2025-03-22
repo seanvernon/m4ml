@@ -2,10 +2,39 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{enumitem}
-\usepackage[style=verbose]{biblatex}
-\usepackage[margin=1in]{geometry}
-\usepackage{hyperref}
 \usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+% The following, up to \title, is from this StackOverflow post: https://stackoverflow.com/a/3175141
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
 
 \title{Note 8: Convexity}
 \author{Math 198: Math for Machine Learning}

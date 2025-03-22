@@ -2,9 +2,38 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{enumitem}
-\usepackage[style=verbose]{biblatex}
+\usepackage{graphicx}
 \usepackage[margin=1in]{geometry}
-\usepackage{hyperref}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+% The following, up to \title, is from this StackOverflow post: https://stackoverflow.com/a/3175141
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
 
 \title{Note 5: SVD and PCA}
 \author{Math 198: Math for Machine Learning}
@@ -186,8 +215,8 @@ Easy to fill in the details from the comment directly preceding the theorem comb
 \\ \\
 When passing to the eigenbasis of $\textbf{A}^\top\textbf{A}$ via $\textbf{V}^\top$, we effectively ignore vectors in $\ker(\textbf{A})$, as $\mathbf{\Sigma}$ will kill them. As for the relevant coordinates, we let the singular vectors transform them, $\mathbf{\Sigma}$ scale them, and then $\textbf{U}$ bring them back into the image where they belong. 
 
-\newpage
-\section{Application: Principal Component Analysis (PCA)}
+\clearpage
+\section*{Application: Principal Component Analysis (PCA)}
 \subsection*{Motivation}
 When fitting a model (e.g. an OLS model) to data, we hope to represent the data in a simpler way. A basketball player is a complex object; a vector representing $(\textbf{points}, \textbf{assists}, \textbf{rebounds}, \textbf{eye color}, \textbf{birthday})$ is not. However, we hope to use only the most relevant features for (i) fast computation and (ii) to build a more stable model (i.e. reduce the variance of the model). How can we find the features that are important for predicting whether a player helps his team win (probably \textbf{points}, \textbf{assists}, \textbf{rebounds}), allowing us to ignore the features that are not (probably \textbf{eye color}, \textbf{birthday})?
 \\ \\
@@ -278,7 +307,4 @@ Our PCA solution $\widetilde{\textbf{X}}_k$ is the best rank-$k$ approximation t
 ||\textbf{X} - \widetilde{\textbf{X}}_k|| \leq ||\textbf{X} - \textbf{Y}||.
 \]
 This theorem tells us that the process of projecting our data onto a subspace via PCA amounts to finding the best rank-$k$ approximation of $\textbf{X}$. 
-
-\subsection*{Sources}
-A more thorough treatment of PCA can be found here: \url{https://www.eecs189.org/static/notes/n10.pdf}
 \end{document}

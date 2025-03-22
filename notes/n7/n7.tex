@@ -2,10 +2,38 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{enumitem}
-\usepackage[style=verbose]{biblatex}
-\usepackage[margin=1in]{geometry}
-\usepackage{hyperref}
 \usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+% The following, up to \title, is from this StackOverflow post: https://stackoverflow.com/a/3175141
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
 
 \title{Note 7: Vector and Matrix Calculus}
 \author{Math 198: Math for Machine Learning}
@@ -33,7 +61,7 @@ The \textit{Hessian} generalizes second-order derivatives to vector calculus. It
 We can extend the gradient to functions which map vector spaces to higher-dimensional vector spaces. Our function $f: \mathbb{R}^n \rightarrow \mathbb{R}^m$ now maps vectors to other vectors, and its derivative, known as the \textit{Jacobian}, is a matrix: $$\mathbf{J}_f(\mathbf{x}) = \begin{bmatrix} \frac{\partial f}{\partial x_1} & \hdots & \frac{\partial f}{\partial x_n} \end{bmatrix} = \begin{bmatrix} \frac{\partial f_1}{\partial x_1} & \hdots & \frac{\partial f_1}{\partial \mathbf{x}_n} \\ \vdots & \ddots & \vdots \\ \frac{\partial f_m}{\partial \mathbf{x}_1} & \hdots & \frac{\partial f_m}{\partial \mathbf{x}_n} \end{bmatrix}$$ In the case that $m = 1$, then $\mathbf{J}_f = \nabla f^{\top}$.
 
 \subsection{Differentiation Practices}
-We start by noting that the chain rule still holds in vector calculus. If we have $f: \mathbb{R}^m \rightarrow \mathbb{R}^k$ and $g: \mathbb{R}^n \rightarrow \mathbb{R}^m$, then $f \circ g: \mathbb{R}^n \rightarrow \mathbb{R}^k$ and $$\mathbf{J}_{f \circ g}(\mathbf{X}) = \mathbf{J}_f(g(\mathbf{x}))\mathbf{J}_g(\mathbf{x})$$ If $k = 1$ then $$\nabla (f \circ g)(\mathbf{x}) = \mathbf{J}_g(\mathbf{x})^{\top}\nabla f(g(\mathbf{x}))$$ The proofs follow easily from the chain rule on partial derivatives.\footnote{For more matrix identities than you could ever care to know, check out the Matrix Cookbook: \url{https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf}.}\\\\
+We start by noting that the chain rule still holds in vector calculus. If we have $f: \mathbb{R}^m \rightarrow \mathbb{R}^k$ and $g: \mathbb{R}^n \rightarrow \mathbb{R}^m$, then $f \circ g: \mathbb{R}^n \rightarrow \mathbb{R}^k$ and $$\mathbf{J}_{f \circ g}(\mathbf{X}) = \mathbf{J}_f(g(\mathbf{x}))\mathbf{J}_g(\mathbf{x})$$ If $k = 1$ then $$\nabla (f \circ g)(\mathbf{x}) = \mathbf{J}_g(\mathbf{x})^{\top}\nabla f(g(\mathbf{x}))$$ The proofs follow easily from the chain rule on partial derivatives.\footnote{For more matrix identities than you could ever care to know, check out the Matrix Cookbook: https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf.}\\\\
 When you first start taking derivatives involving vectors and matrices, the combination of calculus notation and matrix/vector notation can quickly become overwhelming. Gradients, Hessians, and Jacobians are all themselves vectors or matrices, which adds to the confusion. It can be helpful to first consider the entries in the vector or matrix you are calculating one-at-a-time, thereby breaking up the vectorized multivariate functions we are differentiating into multiple scalar multivariate functions. Writing out these functions further without the use of summation notation can also help when calculating partial derivatives. Once you have gained familiarity with this process, you can skip these steps.
 
 \clearpage
@@ -53,8 +81,7 @@ On each step, we update the weights by moving down the gradient as scaled by som
 The gradient descent algorithm stops when the value of $L(\mathbf{w}^{(t)})$ converges. If $L(\mathbf{w}^{(t)})$ has converged, then $\nabla L(\mathbf{w^{(t)}}) = 0$; therefore, gradient descent is an algorithm for finding critical points, as expected. Gradient descent will certainly not converge to a maxima (unless it starts at one), as it lowers the value of $L(\mathbf{w}^{(t)})$ at each step; additionally, it will almost certainly avoid saddle points unless the gradient around them is very small in all directions, as usually the steps will overshoot saddle points. (The magnitude of the gradient is not necessarily the distance to a critical point; we are only given the direction of steepest descent.) So we expect that gradient descent will mostly return minima -- even if it initially overshoots a local minimum, the direction of steepest descent will reverse, and the algorithm will head back in the right direction. However, once gradient descent finds a local minimum, it will likely get stuck; it will not explore further to find potentially better local minima. Therefore, the quality of the solution returned depends on the initial starting point of the algorithm:
 
 \begin{center}
-    \includegraphics[width=.6\textwidth]{figures/fig1.png}\\
-    Source: \href{https://towardsdatascience.com/machine-learning-101-an-intuitive-introduction-to-gradient-descent-366b77b52645}{Towards Data Science}
+    \includegraphics[width=.6\textwidth]{figures/fig1.png}
 \end{center}
 
 \noindent Only one of the initializations shown finds the true global minimum, although some are better than others. Nonetheless, gradient descent is very successful at training neural networks, and there are extensions to the algorithm which have better practical performance. However, for a special class of functions, we can show that all local minima are equal to the global minimum. These functions are known as \textit{convex functions}, and we will discuss them in the next note.

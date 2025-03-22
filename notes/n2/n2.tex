@@ -57,11 +57,8 @@
 \begin{document}
 \maketitle
 
-\section{Topic: Vector Spaces, Linear Maps, and Matrices}
-Linear algebra touches nearly every facet of machine learning. Broadly, linear algebra is the study of \textit{vector spaces} and the maps between them, \textit{linear transformations}. 
-
-\subsection{Vector Spaces and Subspaces}
-A (real) \textit{vector space} is a set $V$ that is closed under finite vector addition and scalar multiplication and that satisfies the following axioms:
+\section{Vector Spaces and Subspaces}
+Linear algebra touches nearly every facet of machine learning. Broadly, linear algebra is the study of \textit{vector spaces} and the maps between them, \textit{linear transformations}. A (real) \textit{vector space} is a set $V$ that is closed under finite vector addition and scalar multiplication and that satisfies the following axioms:
 \begin{enumerate}[label=(\alph*)]
 \item Associativity of addition: $(\tbf{x}+\tbf{y})+\tbf{z} = \tbf{x}+(\tbf{y}+\tbf{z})$;
 \item Additive identity: There exists an identity element $\tbf{0} \in V$ such that $\tbf{x}+\tbf{0} = \tbf{x}$ for all $\tbf{x} \in V$;
@@ -79,7 +76,7 @@ By convention, we refer to the vector space as $V$ and to an element of $V$ as a
 \end{itemize}
 A \tit{subspace} of a vector space $V$ is a subset $U \subseteq V$ such that $U$ is a vector space under the same addition and scalar multiplication operations. Subspaces are easy to characterize: A nonempty subset $U \subseteq V$ is a subspace iff $U$ contains $\tbf{0}$ and is closed under addition and scalar multiplication. No need to check the other axioms -- since they are met in $V$, they are met in $U$.
 
-\subsection{Basis and Dimension}
+\section{Basis and Dimension}
 We'll quickly run through some key definitions. Let $V$ be a vector space. Given $\tbf{x}_1, ..., \tbf{x}_k \in V$, a \tit{linear combination} of $\tbf{x}_1, ..., \tbf{x}_k$ is any vector of the form $a_1\tbf{x}_1 + ... + a_k\tbf{x}_k$, where $a_i \in \R$. Note that saying $V$ is closed under finite addition and scalar multiplication is equivalent to saying that $V$ is closed under taking linear combinations. Given some subset $A \subseteq V$, define the \tit{span} of $A$, denoted $\text{span}(A)$, to be the set of linear combinations of vectors in $A$.  A nonzero set of vectors $\{\tbf{x}_1, ... , \tbf{x}_k\} \subseteq V$ is said to be \tit{linearly independent} if there do not exist scalars $a_1, ... ,a_k$, all nonzero, such that $a_1\tbf{x}_1 + ... + a_k\tbf{x}_k = \mathbf{0}$, i.e. you can't write any of the vectors as a nontrivial linear combination of the others. The definition implies that any set of vectors containing $\tbf{0}$ is not linearly independent.
 \\ \\
 A \tit{basis} for $V$ is a set $B = \{\tbf{x}_1, ... , \tbf{x}_d\} \subseteq V$ such that (i) $B$ is linearly independent and (ii) $\text{span}(B) = V$. Intuitively, (i) ensures that $B$ doesn't have too many vectors, and (ii) ensures that $B$ has enough vectors to write every $\tbf{x} \in V$ as a linear combination of vectors in $B$. Some facts about bases: 
@@ -91,7 +88,7 @@ A \tit{basis} for $V$ is a set $B = \{\tbf{x}_1, ... , \tbf{x}_d\} \subseteq V$ 
 \end{itemize}
 We will work almost exclusively with finite-dimensional vector spaces\footnote{Infinite dimensional vector spaces are usually spaces of functions, e.g. $C(\R, \R)$, the space of continuous functions from $\R$ to $\R$ with pointwise addition and s.m.. Their study is known as \tit{functional analysis}.}. The standard basis for the $d$-dimensional vector space $\R^d$ is $\{e_1, ... , e_d\}$, where $e_1 = (1,0,...,0)$, $e_2 = (0,1,0,...,0)$, etc.  From now on, assume that every vector space is finite-dimensional unless stated otherwise.
 
-\subsection{Inner Products, Orthogonality, and Norms}
+\section{Inner Products, Orthogonality, and Norms}
 For a real vector space $V$, an \tit{inner product} is a map $\la \cdot, \cdot \ra: V \times V \to \mathbb{R}$ satisfying 
 \begin{enumerate}[label = (\alph*)]
 \item Linearity in the first coordinate: $\la a\tbf{x} + \tbf{y}, \tbf{z} \ra = a\la \tbf{x},\tbf{z}\ra + \la \tbf{y}, \tbf{z} \ra$
@@ -106,7 +103,7 @@ Norms allow us to assign a ``size" to each vector. In $\R^d$, there is an import
 $$||\bold{x}||_p = \left(\sum_{i = 1}^d (x_i)^p\right)^\frac{1}{p}.$$
 Note that $||\bold{x}||_2 = \sqrt{\langle \bold{x},  \bold{x}\rangle}$, the norm induced by the dot product.
 
-\subsection{Linear Maps and Isomorphism}
+\section{Linear Maps and Isomorphism}
 Let $V,W$ be vector spaces. A function $T: V \to W$ is said to be a \tit{linear map} if 
 $$T(a\tbf{x} + \tbf{y}) = aT(\tbf{x}) + T(\tbf{y})$$
 That is, a linear map preserves vector addition and scalar multiplication.\\ \\
@@ -125,7 +122,7 @@ How can we say that two arbitrary vector spaces are ``the same"? We use the noti
 \end{enumerate}
 The vector spaces $V$ and $W$ are \tit{isomorphic} if there exists an isomorphism between them, in which case we write $V \cong W$. The above equivalences imply that two vector spaces are isomorphic if and only if they share the same dimension. Thus, every $d$-dimensional vector space is isomorphic to $\R^d$. Given a $d$-dimensional vector space $V$, how do we exhibit such an isomorphism to $\R^d$? By choosing a basis $B = \{\tbf{x}_1, ... , \tbf{x}_d\}$ and letting $T(\tbf{x}_i) = e_i$. If $\dim V = n$ and $\dim W = m$, we can always identify $V$ with $\R^n$ and $W$ with $\R^m$ if needed. 
 
-\subsection{Matrices}
+\section{Matrices}
 The key idea of this section is that we can concretely represent linear maps between finite-dimensional vector spaces as matrices. Given a map $T: \R^n \to \R^m$, we can form a matrix $\tbf{A} \in \R^{m\times n}$ such that $\tbf{A}\tbf{x} = T(\tbf{x})$ by setting the $i^{\text{th}}$ column of $A$ to be the column vector $T(\tbf{e}_i) \in \R^m$. In other words, 
 $$
 \tbf{A} = 
@@ -140,17 +137,17 @@ To see that this construction works, recall that the action of $T$ is
 Note that we necessarily define $A$ with respect to an ordered basis for $\R^n$ and $\R^m$. In fact, any time we write out the elements of a vector or matrix, we do so with respect to some ordered basis. For example, the $i$-th column of a matrix $A$ represents the action of that matrix on the $i$-th basis vector. To limit confusion, you can always assume that a matrix or vector is being written with respect to the standard bases unless otherwise noted.
 
 \clearpage
-\section{Applications: Projections}
-\subsection{Motivation}
+\section*{Applications: Projections}
+\subsection*{Motivation}
 Recall from note 1 that the goal of Ordinary Least Squares is to determine a weight vector $\mathbf{w}$ such that $\mathbf{Xw} \approx \mathbf{y}$ for our data matrix $\mathbf{X}$ and observations $y$. Suppose that $y \in \text{range}(\mathbf{X})$ and that $\mathbf{X}$ is invertible.\footnote{Since a matrix $\mathbf{A}$ represents a linear map $T$, $A$ is invertible if $T$ is invertible, and the inverse of $\mathbf{A}$, $\mathbf{A^{-1}}$, represents $T^{-1}$ with respect to the same bases as $\mathbf{A}$.} Then we could solve directly: $\mathbf{w} = \mathbf{X}^{-1}\mathbf{y}$. Of course, this scenario is rarely, if ever, seen in practice. In general, we will not be able to come up with an exact solution for the equation $\mathbf{Xw} = \mathbf{y}$; instead, we seek a weight vector $\mathbf{w}$ such that $\mathbf{Xw}$ is the best approximation to $\mathbf{y}$ in the range of $\mathbf{X}$.\footnote{We will not yet present a probabilistic motivation for our idea of "closeness"; this will be done in the probability section of the course.} To do so, we will first introduce the notion of an \tit{orthogonal projection}.
 
-\subsection{Projectors}
+\subsection*{Projectors}
 Suppose we have some vector space $V$, some subspace $W \subset V$, and some element $\mathbf{v} \in V$ such that $\mathbf{v} \notin W$. Define the orthogonal projection of $\mathbf{v}$ in $W$, $\mathbf{v}_w$, to be the vector in $W$ which is closest to $\mathbf{v}$: $$\mathbf{v}_w = \argmin\limits_{\mathbf{w} \in W} ||\mathbf{v} - \mathbf{w}||$$ How can we go about finding such a vector? The first step is to note that $\mathbf{v}_w$ is the closest vector in $W$ to $\mathbf{v}$ if and only if $\mathbf{v} - \mathbf{v}_w$ is orthogonal to every $\mathbf{w} \in W$. \\\\
 \tit{Proof}. Fix some arbitrary $\mathbf{w} \in W$, and define the function\footnote{Do not confuse the $w$ in $\mathbf{v}_w$ and the $\mathbf{w}$ in the $t\mathbf{w}$ term; $\mathbf{v}_w$ is the orthogonal projection of $\mathbf{v}$ in $W$, and $\mathbf{w}$ is some arbitrary vector in $W$.} $f_w(t) = ||\mathbf{v} - (\mathbf{v}_w + t\mathbf{w})||^2$. Then $f$ is the square of the distance between $\mathbf{v}_w + t\mathbf{w}$, a vector in $W$, and $v$. It should be clear that $f$ is minimized when $t = 0$. So, the derivative of $f_w$ at $t = 0$ is 0. To determine the derivative of $f_w$, we first expand it by rewriting it as an inner product: $$f_w(t) = \la (\mathbf{v} - \mathbf{v}_w) - t\mathbf{w}, (\mathbf{v} - \mathbf{v}_w) - t\mathbf{w} \ra$$ $$= \la \mathbf{v} - \mathbf{v}_w, \mathbf{v} - \mathbf{v}_w \ra - 2\la \mathbf{v} - \mathbf{v}_w, t\mathbf{w} \ra + \la t\mathbf{w}, t\mathbf{w}\ra $$ $$= ||\mathbf{v} - \mathbf{v}_w||^2 - 2t\la \mathbf{v} - \mathbf{v}_w, \mathbf{w}\ra + t^2||\mathbf{w}||^2$$ We then take the derivative with respect to $t$: $$f'_w(t) = -2\la \mathbf{v} - \mathbf{v}_w, \mathbf{w}\ra + 2t||\mathbf{w}||^2$$ and so $$0 = f'_w(0) = -2\la \mathbf{v} - \mathbf{v}_w, \mathbf{w} \ra$$ and so $\mathbf{v} - \mathbf{v}_w$ is orthogonal to $\mathbf{w}$. Since our choice of $\mathbf{w}$ was arbitrary, we conclude that $\mathbf{v} - \mathbf{v}_w$ is orthogonal to every vector in $W$. To prove the converse, note that $f_w$ is quadratic in its input and non-negative; so if $\mathbf{v} - \mathbf{v}_w$ is orthogonal to every vector in $W$, then $f'_w(0) = 0$, and so $t = 0$ must be the global minimum of $f_w$ for all $\mathbf{w}$; so, $||\mathbf{v} - (\mathbf{v}_w + t\mathbf{w})||^2$ is minimized for $t = 0$, and thus $\mathbf{v}_w$ is the closest vector in W to $\mathbf{v}$. $\hfill\square$ \\\\
 This proof has an important corollary. We have proven that $\mathbf{v} - \mathbf{v}_w$ is orthogonal to the subspace $W$. Let $W^{\top}$ denote the set of all vectors in $V$ which are orthogonal to $W$; so, $\mathbf{v} - \mathbf{v}_w \in W^{\top}$. It turns out that $W^{\top}$ is itself a subspace such that $W \oplus W^{\top} = V$. \\\\
 \tit{Proof}. We first show that $W^{\top}$ is a subspace of $V$. Fix $\mathbf{v_1}, \mathbf{v_2} \in W^{\top}$ and $a \in \R$. Then, for all $\mathbf{w} \in W$, $$\la \mathbf{v_1} + \mathbf{v_2}, \mathbf{w}\ra = \la \mathbf{v_1}, \mathbf{w}\ra + \la \mathbf{v_2}, \mathbf{w} \ra = 0 + 0 = 0$$ $$\la a\mathbf{v_1}, \mathbf{w} \ra = a\la \mathbf{v_1}, \mathbf{w} \ra = a0 = 0$$ so $\mathbf{v_1} + \mathbf{v_2} \in W^{\top}$ and $a\mathbf{v_1} \in W^{\top}$ and so $W^{\top}$ is a subspace. We now show that $W \oplus W^{\top} = V$. To do so, we show that any vector $\mathbf{v} \in V$ can be decomposed into the sum of two vectors, one in $W$, and one in $W^{\top}$. Of course, $\mathbf{v} = \mathbf{v}_w + (\mathbf{v} - \mathbf{v}_w)$; since $\mathbf{v}_w \in W$ and $\mathbf{v} - \mathbf{v}_w \in W^{\top}$, we have $V = W \oplus W^{\top}$. $\hfill\square$ \\\\
 Suppose $V$ has dimension $n$ and $W$ has dimension $k$. Then by the corollary, $W^{\top}$ has dimension $n - k$. Furthermore, suppose we have some orthogonal\footnote{Such a basis is guaranteed to exist. We can turn any basis into an orthonormal basis using Gram-Schmidt Orthonormalization, which is out of scope for this course because it is computationally horrifying. So, we can take any basis for $W$, orthonormalize it, and then extend it to an orthonormal basis for $V$ to obtain the desired basis for any finite vector space.} basis (likely non-standard) for $V$, $\beta = \{\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_n\}$, such that $\{\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_k\}$ is a basis for $W$. Then $\{\mathbf{v}_{k+1}, \ldots, \mathbf{v}_n\}$ is a basis for $W^{\top}$.\footnote{The proof for this is trivial, but the fact that our basis for $V$ is orthogonal is essential.} Consider some vector $\mathbf{v} \in V$. We can write $\mathbf{v} = \sum\limits_{i = 1}^n \alpha_i\mathbf{v}_i$ for appropriate coefficients $\alpha_i$. Define $\mathbf{v}_w = \sum\limits_{i = 1}^k\alpha_i\mathbf{v}_i$. Then $$\mathbf{v} - \mathbf{v}_w = \sum\limits_{i = k+1}^n\alpha_i\mathbf{v}_i \in W^{\top}$$ and so $\mathbf{v}_w = \sum\limits_{i=1}^k\alpha_i\mathbf{v}_i$ is the orthogonal projection of $\mathbf{v}$ in $W$. So we have reduced the problem of finding the closest approximation to $\mathbf{v}$ to the problem of finding an orthogonal basis for our subspace, $W$.
 
-\subsection{Conclusion}
+\subsection*{Conclusion}
 In section 2.1, we concluded that we seek a weight vector $\mathbf{w}$ such that $\mathbf{Xw}$ is the best approximation to $\mathbf{y}$ in the range of $\mathbf{X}$. Recall from note 1 that $\mathbf{X}$ is an $n\times d$ matrix, $\mathbf{y}$ is an $n$-dimensional vector, and $\mathbf{w}$ is a $d$-dimensional vector. Suppose that $\mathbf{X}$ is \tit{full rank}, that is, $\dim(\text{range}(\mathbf{X})) = d$. In the language of section 2.2, we have that $V = \R^n$, $W = \text{range}(\mathbf{X}) \cong \R^d$, $\mathbf{v} = \mathbf{y}$, and $\mathbf{v}_w = \mathbf{Xw}$. In the coming weeks, we will complete this derivation using special classes of matrices, and then confirm that it behaves as we would expect by developing the class of \tit{projection matrices}.
 \end{document}
