@@ -1,0 +1,109 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+\newcommand{\PrMe}{\mathbb{P}}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+% The following, up to \title, is from this StackOverflow post: https://stackoverflow.com/a/3175141
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\title{Note 10: Probability Basics}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Probability Measures}
+Probability theory allows us to assign likelihoods to events for processes with contain some element of random chance. Take, for instance, a dice roll. There are six possible outcomes; this set of possible outcomes is known as the \textit{sample space} and is denoted $\Omega$. In general, $\Omega$ can be an infinite set, for which the probability of any specific outcome is 0. Therefore we additionally consider \textit{events}, which are subsets of $\Omega$. The set of all events is denoted $\mathcal{F}$. We can then define a \textit{probability measure} which associates events in $\mathcal{F}$ with probabilities between 0 and 1, that is, $\PrMe: \mathcal{F} \rightarrow [0, 1]$. This measure must satisfy two basic properties: $\PrMe(\Omega) = 1$, and for any countable collection of disjoint sets $\{A_i\} \subseteq \mathcal{F}$, $\PrMe\big(\bigcup_i A_i\big) = \sum_i\PrMe(A_i)$ (\textit{countable additivity}). Together $\Omega$, $\mathcal{F}$, and $\PrMe$ constitute a \textit{probability space}. \\\\
+We will now consider a handful of basic and useful results which apply to all probability spaces. For some event $A$ we can define the \textit{complement} of $A$, $A^c = \Omega \backslash A$. Then $\PrMe(A^c) = 1 - \PrMe(A)$, as $A + A^c = \Omega$. Furthermore, if we have two events $A, B$ such that $B \subseteq A$, then $\PrMe(B) \leq \PrMe(A)$: $$\PrMe(A) = \PrMe(B \cup (A \backslash B)) = \PrMe(B) + \PrMe(A\backslash B) \geq \PrMe(B)$$
+If $A$ and $B$ are taken to be generic events, with possible overlap, then $\PrMe(A \cup B) = \PrMe(A) + \PrMe(B) - \PrMe(A \cap B)$:
+\begin{align*}
+\PrMe(A \cup B) &= \PrMe((A \cap B) \cup (A \backslash B) \cup (B \backslash A)) \\
+&= \PrMe(A \cap B) + \PrMe(A \backslash B) + \PrMe(B \backslash A) \\
+&= \PrMe(A \cap B) + \PrMe(A) - \PrMe(A \cap B) + \PrMe(B) - \PrMe(A \cap B) \\
+&= \PrMe(A) + \PrMe(B) - \PrMe(A \cap B)
+\end{align*}
+Generally, for any countable set of events $\{ A_i \} \subseteq \mathcal{F}$, $\PrMe\big(\bigcup_iA_i\big)\leq\sum_i\PrMe(A_i)$; this is known as the \textit{union bound}. \\\\
+We denote the \text{conditional probability} of an event $A$ given an event $B$ occurred as $\PrMe(A | B)$, and it is defined as $$\PrMe(A | B) = \frac{\PrMe(A\cap B)}{\PrMe(B)}$$ for $\PrMe(B) > 0$. From this definition we can derive the equality $\PrMe(A\cap B) = \PrMe(A|B)\PrMe(B) = \PrMe(B|A)\PrMe(A)$, and from this we arrive at \textit{Bayes' rule}: $$\PrMe(A|B) = \frac{\PrMe(B|A)\PrMe(A)}{\PrMe(B)}$$ In this context we refer to $\PrMe(A)$ as the \textit{prior probability}, $\PrMe(A|B)$ as the $\textit{posterior}$, and $\PrMe(B|A)$ as the $\textit{likelihood}$.
+
+\section{Random Variables/Vectors}
+So far we have considered outcomes and events, but we will work more often with \textit{random variables}, which are any uncertain quantities with an associated probability distribution over the values they can assume. For example, consider two dice rolls. Both dies rolling a 6 is an outcome, the sum of the dies equaling 7 is an event, and the sum of the dies is a random variable. Formally, a random variable on a probability space $(\Omega, \mathcal{F}, \PrMe)$ is a function $X: \Omega \rightarrow \mathbb{R}$. \\\\
+We can define the probability that a random variable $X$ takes on some value $x$ by making reference to the outcomes in $\Omega$: $$\PrMe(X = x) = \PrMe(\{\omega \in \Omega : X(\omega) = x\})$$
+For a random variable $X$ we define the \textit{cumulative distribution function}, which gives the probability that $X$  is at most some value: $$F(x) = \PrMe(X \leq x)$$
+The CDF can also be used to give us the probability that a variable lies within some range: $$\PrMe(a < X \leq b) = F(b) - F(a)$$
+If $X$ has a countable range and assumes each value in this range with positive probability, we describe it as a \textit{discrete random variable}. We can then define a \textit{probability density function} $p: X(\Omega) \rightarrow [0, 1]$ which satisfies $$\sum_{x \in X(\Omega)} p(x) = 1$$ by just setting $p(x) = \PrMe(X = x)$. \\\\
+For a \textit{continuous random variable} with an uncountable range, each value in the range is assumed with probability zero. In this case we define a PDF $p: \mathbb{R} \rightarrow [0, \infty)$ such that $$F(x) = \int_{-\infty}^x p(z) \text{d}z$$ with the requirement that $$\int_{-\infty}^\infty p(x)\text{d}x = 1$$ The values of $p$ are not exactly probabilities (notably they can take on any positive value), but can be understood to represent the relative likelihood that the value of $X$ falls in the neighborhood of $x$. In particular, for small $\epsilon > 0$, $$\PrMe(x - \epsilon \leq X \leq x + \epsilon) = \int_{x - \epsilon}^{x + \epsilon} p(z)\text{d}z \approx 2\epsilon p(x)$$
+
+\section{Expected Value}
+We can define the average value of a random variable $X$ -- we refer to this as the \textit{expected value} or \textit{mean} $\mathbb{E}[X]$. For discrete $X$ we have $$\mathbb{E}[X] = \sum_{x \in X(\Omega} xp(x)$$ and for continuous $X$ $$\mathbb{E}[X] = \int_{-\infty}^\infty xp(x)\text{d}x$$ The mean of a distribution can be interpreted as the center of mass of its PDF. \\\\
+Perhaps the nicest thing about taking expected values is that they are linear: $$\mathbb{E}\big[\sum_{i=1}^n \alpha_iX_i + \beta\big] = \sum_{i=1}^n \alpha_i\mathbb{E}[X_i] + \beta$$ which holds even if the $X_i$ are not independent.
+
+\section{Variance}
+Just as we can use expectation as a measure of the center of a distribution, the \textit{variance} gives us a measure of the spread about the center. The variance $\text{Var}(X)$ of a random variable $X$ is the average squared deviation of the value of $X$ from its expected value: $$\text{Var}(X) = \mathbb{E}\big[(X - \mathbb{E}[X])^2\big]$$
+It is straightforward to show that $\text{Var}(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2$:
+\begin{align*}
+\text{Var}(X) &= \mathbb{E}\big[(X - \mathbb{E}[X])^2\big] \\
+&= \mathbb{E}[X^2 - 2X\mathbb{E}[X] + \mathbb{E}[X]^2] \\
+&= \mathbb{E}[X^2] - 2\mathbb{E}[X\mathbb{E}[X]] + \mathbb{E}[\mathbb{E}[X]^2] \\
+&= \mathbb{E}[X^2] - 2\mathbb{E}[X]^2 + \mathbb{E}[X]^2 \\
+&= \mathbb{E}[X^2] - \mathbb{E}[X]^2
+\end{align*}
+Variance is not linear, but $\text{Var}(\alpha X + \beta) = \alpha^2 \text{Var}(X)$. However, given $n$ independent random variables $X_1 \hdots X_n$, then $\text{Var}(X_1 + \hdots + X_n) = \text{Var}(X_1) + \hdots + \text{Var}(X_n)$. This is indeed true of any uncorrelated $X_n$; we will expand on this identity in the note on correlation. \\\\
+Finally, as the variance is not in the same units as the random variable itself (due to the squaring in the definition), we additionally define the \textit{standard deviation} $\sigma(X) = \sqrt{\text{Var}(X)}$. This value is of the same scale as $X$ itself, and can be used to normalize $X$: $$\bar{X} = \frac{X - \mathbb{E}[X]}{\sigma(X)}$$
+
+\clearpage
+\section*{Applications: Chebyshev's Inequality}
+Much like the union bound, we are able to define fundamental inequalities which constrain probabilities for arbitrary probability spaces. These properties will come in handy when working with probabilities, regardless of the structure of the problem. \\\\
+First, let's consider a weaker result, Markov's inequality: if $X$ is a nonnegative random variable and $a > 0$,  $$\PrMe(X \geq a) \leq \frac{\mathbb{E}[X]}{a}$$ We show the proof for continuous $X$; the discrete case is similar:
+\begin{align*}
+\mathbb{E}[X] &= \int_{-\infty}^\infty xp(x)\text{d}x \\
+&= \int_0^\infty xp(x)\text{d}x \\
+&= \int_0^a xp(x)\text{d}x + \int_a^\infty xp(x)\text{d}x \\
+&\geq \int_a^\infty xp(x)\text{d}x \\
+&\geq \int_a^\infty ap(x)\text{d}x \\
+&= a\int_a^\infty p(x)\text{d}x \\
+&= a\PrMe(X \geq a)
+\end{align*}
+Chebyshev's inequality is more general -- it applies to all random variables $X$, and gives a more concrete notion of how the variance $\sigma^2$ of $X$ measures its spread around $\mathbb{E}[X]$. For any real number $k > 0$, Chebyshev's inequality gives us that $$\PrMe(|X - \mathbb{E}[X]| \geq k\sigma) \leq \frac{1}{k^2}$$
+Chebyshev's inequality follows from Markov's inequality; let $Y = (X - \mathbb{E}[X])^2$ and $a = (k\sigma)^2$, then $$\PrMe(|X - \mathbb{E}[X]| \geq k\sigma) = \PrMe((X - \mathbb{E}[X])^2 \geq k^2\sigma^2) \leq \frac{\mathbb{E}[X - \mathbb{E}[X]]^2}{k^2\sigma^2} = \frac{\sigma^2}{k^2\sigma^2} = \frac{1}{k^2}$$
+Chebyshev's inequality gives us a decent bound on these probabilities for any possible probability space, but often for specific distributions we can improve on these bounds.
+\clearpage
+\section*{Applications: Law of Large Numbers}
+How do we know that probability theory is valid at all? Theory is useless if it does not agree with practice. Fortunately, the Law of Large Numbers ensures that, after a sufficiently large number of trials, practice is guaranteed to match theory. More formally, if we continue to take independent, identically distributed samples, the sample average will converge to the true average of the distribution. \\\\
+The statement of the (weak\footnote{The strong version differs in the strength of the convergence; both laws essentially say the same thing.}) law of large numbers is as follows. Let $X_1, X_2, \hdots$ be a series of independent, identically distributed random variables with mean $\mu$. The sample average of $n$ such random variables is $\bar{X_n} = \frac{1}{n}\sum_{i=1}^n X_i$. Then for any $\epsilon > 0$, $$\lim_{n \rightarrow \infty}\PrMe(|\bar{X_n} - \mu| < \epsilon) = 0$$
+If the variance $\sigma^2$ is finite, we can prove the weak law of large numbers using Chebyshev's inequality. Since the $X_i$ are independent, we have $$\text{Var}(\bar{X_n}) = \text{Var}\big(\frac{1}{n}\sum_{i=1}^nX_i\big) = \frac{1}{n^2}\sum_{i=1}^n\text{Var}(X_i) = \frac{n\sigma^2}{n^2} = \frac{\sigma^2}{n}$$
+We then apply Chebyshev's inequality to $\bar{X_n}$: $$\PrMe(|\bar{X_n} - \mu| \geq \epsilon) \leq \frac{\sigma^2}{n\epsilon^2}$$
+Clearly, as $n$ approaches infinity, this upper bound for this probability approaches 0.
+
+\end{document}

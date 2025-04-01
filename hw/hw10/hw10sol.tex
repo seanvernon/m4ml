@@ -1,0 +1,84 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+\newcommand{\PrMe}{\mathbb{P}}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+\title{Homework 10 Solutions}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+Due Date:  \\
+Name: \\
+Student ID:
+
+\section*{Instructions for Submission}
+Please include your name and student ID at the top of your homework submission. You may submit handwritten solutions or typed ones (\LaTeX\ preferred). If you at any point write code to help you solve a problem, please include your code at the end of the homework assignment, and mark which code goes with which problem. Homework is due by start of lecture on the due date; it may be submitted in-person at lecture or by emailing a PDF to both facilitators.
+
+\section{Probability Practice}
+\begin{enumerate}[label=\arabic*.]
+\item Let $X$ be a random variable representing the value of a single roll of an $n$-sided die.
+	\begin{enumerate}[label=(\alph*)]
+	\item Define the cumulative distribution function $F(x)$ in terms of $n$. \\
+		 {\color{blue} $F(x) = \frac{x}{n}$}
+	\item Define the probability distribution function $p(x)$ in terms of $n$. \\
+		 {\color{blue} $p(x) = \frac{1}{n}$}
+	\item Give the expected value of $X$ in terms of $n$. \\
+		 {\color{blue} $\mathbb{E}[X] = \frac{n + 1}{2}$}
+	\item Give the variance of $X$ in terms of $n$. \\
+		 {\color{blue} $\text{Var}(X) =\frac{n^2 -1}{12}$}
+	\end{enumerate}
+\item Let $X$ be a random variable representing a value uniformly sampled (over the reals) from the range $[a, b]$.
+	\begin{enumerate}[label=(\alph*)]
+	\item Define the cumulative distribution function $F(x)$ in terms of $a$ and $b$. \\
+		 {\color{blue} $F(x) = \frac{x-a}{b-a}$}
+	\item Define the probability distribution function $p(x)$ in terms of $a$ and $b$. \\
+		 {\color{blue} $p(x) = \frac{1}{b-a}$}
+	\item Give the expected value of $X$ in terms of $a$ and $b$. \\
+		 {\color{blue} $\mathbb{E}[X] = \frac{a + b}{2}$}
+	\item Give the variance of $X$ in terms of $a$ and $b$. \\
+		 {\color{blue} $\text{Var}(X) = \frac{(b-a)^2}{12}$}
+	\end{enumerate}
+\item Let $\Omega$ be the non-zero integers $\mathbb{Z} \backslash 0$ and $\PrMe(\{\omega\}) = \frac{1}{2^\omega}$. Suppose $X(\omega) = \omega$.
+	\begin{enumerate}[label=(\alph*)]
+	\item Define the cumulative distribution function $F(x)$. \\
+		 {\color{blue} $F(x) = 1 - \frac{1}{2^x}$}
+	\item Define the probability distribution function $p(x)$. \\
+		 {\color{blue} $p(x) = \frac{1}{2^x}$}
+	\item Give the expected value of $X$. \\
+		 {\color{blue} $\mathbb{E}[X] = \lim_{n \rightarrow \infty} \sum_{i=1}^n \frac{i}{2^i} = 2$}
+	\end{enumerate}
+\end{enumerate}
+
+\section{Probability Proofs}
+\begin{enumerate}[label=\arabic*.]
+\item Let $A$ be a generic event. Show that $0 = \PrMe(\varnothing) \leq \PrMe(A) \leq \PrMe(\Omega) = 1$. \\
+	 {\color{blue} $\varnothing \subseteq A \subseteq \Omega$, so this follows from the fact that if $B$ is an event and $B \subseteq A$, $\PrMe(B) \leq \PrMe(A)$.}
+\item Prove the union bound, that is, for any countable set of events $\{A_i\} \subseteq \mathcal{F}$, $\PrMe(\bigcup_iA_i) \leq \sum_i\PrMe(A_i)$. \\
+	 {\color{blue} Define $B_1 = A_1$ and $B_i = A_i \backslash \bigcup_{j < i} A_j$. Note that the $B_i$s are all disjoint, $\bigcup_{j < i} B_i = \bigcup_{j < i} A_i$, and $B_i \subseteq A_i$ for all $i$. Then $$\PrMe\big(\bigcup_i A_i\big) = \PrMe\big(\bigcup_i B_i\big) = \sum_i\PrMe(B_i) \leq \sum_i\PrMe(A_i)$$}
+\item Show that for any random variable $X$, $\text{Var}(\alpha X + \beta) = \alpha^2\text{Var}(X)$. \\
+ 	 {\color{blue} \begin{align*}
+	 \text{Var}(\alpha X + \beta) &= \mathbb{E}[(\alpha X + \beta)^2] - \mathbb{E}[\alpha X + \beta]^2 \\
+	 &= \mathbb{E}[\alpha^2X^2 + 2\alpha\beta X + \beta^2] - (\alpha\mathbb{E}[X] + \beta)^2 \\
+	 &= \alpha^2\mathbb{E}[X^2] + 2\alpha\beta\mathbb{E}[X] + \beta^2 - (\alpha^2\mathbb{E}[X]^2 + 2\alpha\beta\mathbb{E}[X] + \beta^2) \\
+	 &= \alpha^2(\mathbb{E}[X^2] - \mathbb{E}[X]^2) \\
+	 &= \alpha^2\text{Var}(X)
+	 \end{align*}}
+\end{enumerate}
+
+\end{document}

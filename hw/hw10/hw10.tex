@@ -1,0 +1,64 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+\newcommand{\PrMe}{\mathbb{P}}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+\title{Homework 10}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+Due Date:  \\
+Name: \\
+Student ID:
+
+\section*{Instructions for Submission}
+Please include your name and student ID at the top of your homework submission. You may submit handwritten solutions or typed ones (\LaTeX\ preferred). If you at any point write code to help you solve a problem, please include your code at the end of the homework assignment, and mark which code goes with which problem. Homework is due by start of lecture on the due date; it may be submitted in-person at lecture or by emailing a PDF to both facilitators.
+
+\section{Probability Practice}
+\begin{enumerate}[label=\arabic*.]
+\item Let $X$ be a random variable representing the value of a single roll of an $n$-sided die.
+	\begin{enumerate}[label=(\alph*)]
+	\item Define the cumulative distribution function $F(x)$ in terms of $n$.
+	\item Define the probability distribution function $p(x)$ in terms of $n$.
+	\item Give the expected value of $X$ in terms of $n$.
+	\item Give the variance of $X$ in terms of $n$.
+	\end{enumerate}
+\item Let $X$ be a random variable representing a value uniformly sampled (over the reals) from the range $[a, b]$.
+	\begin{enumerate}[label=(\alph*)]
+	\item Define the cumulative distribution function $F(x)$ in terms of $a$ and $b$.
+	\item Define the probability distribution function $p(x)$ in terms of $a$ and $b$.
+	\item Give the expected value of $X$ in terms of $a$ and $b$.
+	\item Give the variance of $X$ in terms of $a$ and $b$.
+	\end{enumerate}
+\item Let $\Omega$ be the non-zero integers $\mathbb{Z} \backslash 0$ and $\PrMe(\{\omega\}) = \frac{1}{2^\omega}$. Suppose $X(\omega) = \omega$.
+	\begin{enumerate}[label=(\alph*)]
+	\item Define the cumulative distribution function $F(x)$.
+	\item Define the probability distribution function $p(x)$.
+	\item Give the expected value of $X$.
+	\end{enumerate}
+\end{enumerate}
+
+\section{Probability Proofs}
+\begin{enumerate}[label=\arabic*.]
+\item Let $A$ be a generic event. Show that $0 = \PrMe(\varnothing) \leq \PrMe(A) \leq \PrMe(\Omega) = 1$.
+\item Prove the union bound, that is, for any countable set of events $\{A_i\} \subseteq \mathcal{F}$, $\PrMe(\bigcup_iA_i) \leq \sum_i\PrMe(A_i)$.
+\item Show that for any random variable $X$, $\text{Var}(\alpha X + \beta) = \alpha^2\text{Var}(X)$.
+\end{enumerate}
+
+\end{document}
