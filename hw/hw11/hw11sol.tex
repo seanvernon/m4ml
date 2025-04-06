@@ -1,0 +1,82 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+\title{Homework 11 Solutions}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+Due Date:  \\
+Name: \\
+Student ID:
+
+\section*{Instructions for Submission}
+Please include your name and student ID at the top of your homework submission. You may submit handwritten solutions or typed ones (\LaTeX\ preferred). If you at any point write code to help you solve a problem, please include your code at the end of the homework assignment, and mark which code goes with which problem. Homework is due by start of lecture on the due date; it may be submitted in-person at lecture or by emailing a PDF to both facilitators.
+
+\section{More Probability Proofs}
+\begin{enumerate}[label=\arabic*.]
+\item Show that for any random variables $X$ and $Y$, $\mathbb{E}[(X - \mathbb{E}[X])(Y - \mathbb{E}[Y])] = \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y]$.
+	 {\color{blue} 
+	 \begin{align*}
+	 \mathbb{E}[(X - \mathbb{E}[X])(Y - \mathbb{E}[Y])] &= \mathbb{E}[XY - X\mathbb{E}[Y] - \mathbb{E}[Y]X + \mathbb{E}[X]\mathbb{E}[Y]] \\
+	 &= \mathbb{E}[XY] - 2\mathbb{E}[X]\mathbb{E}[Y] + \mathbb{E}[X]\mathbb{E}[Y] \\
+	 &= \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y]
+	 \end{align*}
+	 }
+\item Show that for any random variables $X, Y, Z$ and constants $\alpha, \beta$, $$\text{Cov}(\alpha X + \beta Y, Z) = \alpha\text{Cov}(X, Z) + \beta\text{Cov}(Y, Z)$$
+	 {\color{blue}
+	 \begin{align*}
+	 \text{Cov}(\alpha X + \beta Y, Z) &= \mathbb{E}[\alpha XZ + \beta YZ] - \mathbb{E}[\alpha X + \beta Y]\mathbb{E}[Z] \\
+	 &= \mathbb{E}[\alpha XZ] + \mathbb{E}[\beta YZ] - \mathbb{E}[\alpha X]\mathbb{E}[Z] - \mathbb{E}[\beta Y]\mathbb{E}[Z] \\
+	 &= \alpha\mathbb{E}[XZ] - \alpha\mathbb{E}[X]\mathbb{E}[Z] + \beta\mathbb{E}[YZ] - \beta\mathbb{E}[Y]\mathbb{E}[Z] \\
+	 &= \alpha\text{Cov}(X, Z) + \beta\text{Cov}(Y, Z)
+	 \end{align*}
+	 }
+\item Show that for independent random variables $X$ and $Y$, $\text{Cov}(X, Y) = 0$. \\
+	 {\color{blue} For discrete $X, Y$
+	 \begin{align*}
+	 \text{Cov}(X, Y) &= \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y] \\
+	 &= \sum_{x \in \Omega_x}\sum_{y \in \Omega_y} xyp(xy) - \mathbb{E}[X]\mathbb{E}[Y] \\
+	 &= \sum_{x \in \Omega_x}\sum_{y \in \Omega_y}xp(x)yp(y) - \mathbb{E}[X]\mathbb{E}[Y] \\
+	 &= \mathbb{E}[X]\mathbb{E}[Y] - \mathbb{E}[X]\mathbb{E}[Y] \\
+	 &= 0
+	 \end{align*}
+	 The continuous case has an analogous construction.
+	 }
+\item Show that for uncorrelated random variables $X_1, \hdots, X_n$, $\text{Var}(X_1 + \hdots + X_n) = \sum_{i = 1}^n \text{Var}(X_i)$. \\
+	 {\color{blue}
+	 \begin{align*}
+	 \text{Var}(\sum_{i=1}^n X_i) &= \mathbb{E}[(\sum_{i=1}^n X_i)^2] - \mathbb{E}[\sum_{i=1}^n X_i]^2 \\
+	 &= \sum_{i=1}^n\sum_{j=1}^n \mathbb{E}[X_iX_j] - \sum_{i=1}^n\sum_{j=1}^n \mathbb{E}[X_i]\mathbb{E}[X_j] \\
+	 &= \sum_{i=1}^n\sum_{j=1}^n \mathbb{E}[X_iX_j] - \mathbb{E}[X_i]\mathbb{E}[X_j] \\
+	 &= \sum_{i=1}^n\sum_{j=1}^n \text{Cov}(X_i, X_j)
+	 \end{align*}
+	 Since the $X_i$ are uncorrelated with one another, all the $\text{Cov}(X_i, X_j)$ terms will be 0 when $i \neq j$, so this further simplifies to $\sum_{i=1}^n \text{Var}(X_i)$.
+	 }
+\item Show that for any random vector $\mathbf{X}$, its covariance matrix $\mathbf{\Sigma}$ is positive semi-definite. \\
+	 {\color{blue}
+	 For any $\mathbf{x}$,
+	 \begin{align*}
+	 \mathbf{x^\top\Sigma x} &= \mathbf{x^\top}\mathbb{E}[(\mathbf{X} - \mathbb{E}[\mathbf{X}])(\mathbf{X} - \mathbb{E}[\mathbf{X})^\top]\mathbf{x} \\
+	 &= \mathbb{E}[\mathbf{x^\top(X - \mathbb{E}[X])(X - \mathbb{E}[X])^\top x}] \\
+	 &= \mathbb{E}[((\mathbf{X - \mathbb{E}[X])^\top x)^2]} \geq 0
+	 \end{align*}
+	 }
+\end{enumerate}
+
+\end{document}

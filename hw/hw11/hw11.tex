@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[overload]{empheq}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+
+% These two lines are from this StackExchange post: https://tex.stackexchange.com/a/177270
+\usepackage{sectsty}
+\allsectionsfont{\mdseries}
+
+\title{Homework 11}
+\author{Math 198: Math for Machine Learning}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+Due Date:  \\
+Name: \\
+Student ID:
+
+\section*{Instructions for Submission}
+Please include your name and student ID at the top of your homework submission. You may submit handwritten solutions or typed ones (\LaTeX\ preferred). If you at any point write code to help you solve a problem, please include your code at the end of the homework assignment, and mark which code goes with which problem. Homework is due by start of lecture on the due date; it may be submitted in-person at lecture or by emailing a PDF to both facilitators.
+
+\section{More Probability Proofs}
+\begin{enumerate}[label=\arabic*.]
+\item Show that for any random variables $X$ and $Y$, $\mathbb{E}[(X - \mathbb{E}[X])(Y - \mathbb{E}[Y])] = \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y]$.
+\item Show that for any random variables $X, Y, Z$ and constants $\alpha, \beta$, $$\text{Cov}(\alpha X + \beta Y, Z) = \alpha\text{Cov}(X, Z) + \beta\text{Cov}(Y, Z)$$
+\item Show that for independent random variables $X$ and $Y$, $\text{Cov}(X, Y) = 0$.
+\item Show that for uncorrelated random variables $X_1, \hdots, X_n$, $\text{Var}(X_1 + \hdots + X_n) = \sum_{i = 1}^n \text{Var}(X_i)$.
+\item Show that for any random vector $\mathbf{X}$, its covariance matrix $\mathbf{\Sigma}$ is positive semi-definite.
+\end{enumerate}
+
+\end{document}
