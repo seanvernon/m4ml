@@ -87,8 +87,8 @@ $$L(\beta) = ||\mathbf{r(\beta)}||_2^2$$
 Note that $\mathbf{r(\cdot)}$ is a function which maps $\mathbb{R}^m \rightarrow \mathbb{R}^n$, and so its Jacobian is an $n \times m$ matrix
 $$\mathbf{J_r}(\beta) = \begin{bmatrix} \nabla r_1(\beta)^\top \\ \vdots \\ \nabla r_n(\beta)^\top \end{bmatrix}$$
 which we can use to rewrite the gradient and Hessian of $L$ as\footnote{Proof omitted.}
-$$\nabla L(\beta) = \mathbf{J_r}(\beta)\mathbf{r}(\beta)$$
-$$\nabla^2 L(\beta) = \mathbf{J_r}(\beta)^\top\mathbf{J_r}(\beta) + \sum_{i=1}^n r_i(\beta)\nabla^2r_i(\beta)$$
+$$\nabla L(\beta) = 2\mathbf{J_r}^\top(\beta)\mathbf{r}(\beta)$$
+$$\nabla^2 L(\beta) = 2(\mathbf{J_r}(\beta)^\top\mathbf{J_r}(\beta) + \sum_{i=1}^n r_i(\beta)\nabla^2r_i(\beta))$$
 Why is any of this useful? Recall that the Hessian, $\nabla^2 L(\beta)$, is often expensive to compute. However, as we get close to an optimal point $\beta^*$, the second term in the Hessian of $L$ becomes much smaller than the first term,\footnote{Either because the loss function "smooths out", or because the residuals become small, or both.} and so we can approximate $\nabla^2 L(\beta) \approx \mathbf{J_r}(\beta)^\top\mathbf{J_r}(\beta)$. (Note that this approximation is a characteristic of nonlinear least-squares regression specifically, and not of nonlinear optimization generally.) We can use this approximation to enable the Gauss-Newton algorithm, which uses Newton's method to optimize $\beta$ with update rule 
 $$\beta_{k+1} = \beta_k - (\mathbf{J_r}(\beta_k)^\top\mathbf{J_r}(\beta_k))^{-1}\mathbf{J_r}^\top(\beta_k)\mathbf{r}(\beta_k)$$
 As with Newton's method, this algorithm is heavily dependent on a good starting value $\beta_0$.
